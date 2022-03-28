@@ -67,7 +67,7 @@ You can find more information about our research activity visit our publications
 
 ### <strong>Acknowledgements</strong>
 This work is partially supported by the EU Commission through [RAINBOW](https://rainbow-h2020.eu/)  871403 (ICT-15-2019-2020) project 
-and by the Cyprus Research and Innovation Foundation through COMPLEMENTARY/0916/0916/0171 project.
+and by the Cyprus Research and Innovation Foundation through COMPLEMENTARY/0916/0916/0171 project, and from [RAIS](https://rais-itn.eu/) (Real-time analytics for the Internet of Sports), Marie Skłodowska-Curie Innovative Training Networks (ITN), under grant agreement No 813162.
 
 ### <strong>License</strong>
 The framework is open-sourced under the Apache 2.0 License base. The codebase of the framework is maintained by the authors for academic research and is therefore provided "as is".
