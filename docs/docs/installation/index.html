@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="GitHub Repository #  Visit our Github Repository  to download or fork BenchPilot!
+DockerHub #  All of our Docker images are uploaded on our DockerHub Repository!
+BenchPilot Bootstrapping #  Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="Installation" />
+<meta property="og:description" content="GitHub Repository #  Visit our Github Repository  to download or fork BenchPilot!
+DockerHub #  All of our Docker images are uploaded on our DockerHub Repository!
+BenchPilot Bootstrapping #  Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ucy-linc-lab.github.io/BenchPilot/docs/installation/" /><meta property="article:section" content="docs" />
+
+
+
+<title>Installation | BenchPilot</title>
+<link rel="manifest" href="/BenchPilot/manifest.json">
+<link rel="icon" href="/BenchPilot/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/BenchPilot/book.min.fb69d0e92fcd17fb4042199e803e6bfa0ec2c53ccb74bf57e949532662854dff.css" integrity="sha256-&#43;2nQ6S/NF/tAQhmegD5r&#43;g7CxTzLdL9X6UlTJmKFTf8=" crossorigin="anonymous">
+  <script defer src="/BenchPilot/flexsearch.min.js"></script>
+  <script defer src="/BenchPilot/en.search.min.79080ae461d2ccb33ac33c60bccde77d6540b19970f48e426485938d3db63370.js" integrity="sha256-eQgK5GHSzLM6wzxgvM3nfWVAsZlw9I5CZIWTjT22M3A=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/BenchPilot/"><img src="/BenchPilot/images/plane.png" alt="Logo" /><span>BenchPilot</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/getting-started/" class="">Getting Started</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/installation/" class="active">Installation</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="http://linc.ucy.ac.cy" target="_blank" rel="noopener">
+        About Us
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/BenchPilot/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Installation</strong>
+
+  <label for="toc-control">
+    
+    <img src="/BenchPilot/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents"></nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="strong-stylecolor-40897bgithub-repositorystrong">
+  <strong style="color: #40897B">GitHub Repository</strong>
+  <a class="anchor" href="#strong-stylecolor-40897bgithub-repositorystrong">#</a>
+</h1>
+<p>Visit our <a href="https://github.com/UCY-LINC-LAB/BenchPilot"> Github Repository </a> to download or fork BenchPilot!</p>
+<h1 id="strong-stylecolor-40897bdockerhubstrong">
+  <strong style="color: #40897B">DockerHub</strong>
+  <a class="anchor" href="#strong-stylecolor-40897bdockerhubstrong">#</a>
+</h1>
+<p>All of our Docker images are uploaded on our <a href="https://hub.docker.com/r/benchpilot/benchpilot"> DockerHub Repository</a>!</p>
+<h1 id="strong-stylecolor-40897bbenchpilot-bootstrappingstrong">
+  <strong style="color: #40897B">BenchPilot Bootstrapping</strong>
+  <a class="anchor" href="#strong-stylecolor-40897bbenchpilot-bootstrappingstrong">#</a>
+</h1>
+<p>Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images.</p>
+<!-- For the script to work properly, the user needs to provide a list of essential information about the cluster in the '/conf/bench-cluster-setup.yaml'. Specifically, it's essential to fill each node's <i>hostname</i>, which can be either the machine's IP or hostname that will be reachable from the device BenchPilot is running from, a <i>username</i>, and either an <i>ssh key path</i> or a <i>password</i>. The latter allows BenchPilot to connect and install all necessary software dependencies across the cluster. -->
+<p>This step is required only for the first time of the BenchPilot installation or in case of a hardware update, e.g., introducing a new device.</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(n){const e=window.getSelection(),t=document.createRange();t.selectNodeContents(n),e.removeAllRanges(),e.addRange(t)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents"></nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+baseURL = 'https://ucy-linc-lab.github.io/BenchPilot/'
+languageCode = 'en'
+title = 'BenchPilot'
+defaultcontentlanguage = 'en'
+
+[params]
+  author = 'Joanna Georgiou'
+  description = 'BenchPilot: Repeatable & Reproducible Benchmarking for Edge Micro-DCs'
+  keywords = 'benchmarking,cloud,computing,edge,IoT,dcs'
+  avatarurl = 'images/plane.png'
+  #BookTheme = 'dark'
+  BookToC = true
+  BookLogo = 'images/plane.png'
+  
+[outputs]
+  home = [ "HTML"]
+  
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+      
+[menu]
+[[menu.after]]
+  name = "About Us"
+  url = "http://linc.ucy.ac.cy"
+  weight = 10
+#[[menu.after]]
+#  name = 'GitHub'
+#  pre = "<i class='fa fa-heart'></i>"
+#  url = 'https://github.com/UCY-LINC-LAB/BenchPilot'
+#  weight = 11
+#[[menu.after]]
+#  name = 'DockerHub'
+#  pre = "<i class='fa fa-heart'></i>"
+#  url = 'https://hub.docker.com/r/benchpilot/benchpilot'
+#  weight = 12

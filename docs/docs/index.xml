@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docs on BenchPilot</title>
+    <link>https://ucy-linc-lab.github.io/BenchPilot/docs/</link>
+    <description>Recent content in Docs on BenchPilot</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language><atom:link href="https://ucy-linc-lab.github.io/BenchPilot/docs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Getting Started</title>
+      <link>https://ucy-linc-lab.github.io/BenchPilot/docs/getting-started/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://ucy-linc-lab.github.io/BenchPilot/docs/getting-started/</guid>
+      <description>BenchPilot #  BenchPilot: Repeatable &amp;amp; Reproducible Benchmarking for Edge Micro-DCs
+BenchPilot is a modular and highly customizable benchmarking framework for edge micro-DCs. BenchPilot provides a high-level declarative model for describing experiment testbeds and scenarios that automates the benchmarking process on Streaming Distributed Processing Engines (SDPEs). The latter enables users to focus on performance analysis instead of dealing with the complex and time-consuming setup. BenchPilot instantiates the underlying cluster, performs repeatable experimentation, and provides a unified monitoring stack in heterogeneous Micro-DCs.</description>
+    </item>
+    
+    <item>
+      <title>Installation</title>
+      <link>https://ucy-linc-lab.github.io/BenchPilot/docs/installation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://ucy-linc-lab.github.io/BenchPilot/docs/installation/</guid>
+      <description>GitHub Repository #  Visit our Github Repository  to download or fork BenchPilot!
+DockerHub #  All of our Docker images are uploaded on our DockerHub Repository!
+BenchPilot Bootstrapping #  Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images.</description>
+    </item>
+    
+  </channel>
+</rss>

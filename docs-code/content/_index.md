@@ -1,4 +1,14 @@
-# <strong>BenchPilot</strong>
+---
+title: "Getting Started"
+weight: 1
+# bookFlatSection: false
+# bookToc: true
+# bookHidden: false
+# bookCollapseSection: false
+# bookComments: false
+# bookSearchExclude: false
+---
+# <strong style="color: #40897B">BenchPilot</strong>
 BenchPilot: Repeatable & Reproducible Benchmarking for Edge Micro-DCs
 
 BenchPilot is a modular and highly customizable benchmarking framework for edge micro-DCs. 
@@ -6,24 +16,18 @@ BenchPilot provides a high-level declarative model for describing experiment tes
 
 <p align="center">
    <img src="./BenchPilot_architecture.png" alt="BenchPilot Architecture" style="width: 70%">
-</p>
-
-
-### <strong>BenchPilot Bootstrapping</strong>
-Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images.
-<!-- For the script to work properly, the user needs to provide a list of essential information about the cluster in the '/conf/bench-cluster-setup.yaml'. Specifically, it's essential to fill each node's <i>hostname</i>, which can be either the machine's IP or hostname that will be reachable from the device BenchPilot is running from, a <i>username</i>, and either an <i>ssh key path</i> or a <i>password</i>. The latter allows BenchPilot to connect and install all necessary software dependencies across the cluster. -->
-This step is required only for the first time of the BenchPilot installation or in case of a hardware update, e.g., introducing a new device. 
+</p> 
 
 ### <strong>Experiment Setup</strong>
 A typical workflow starts with the user submitting in a yaml file their choice of experiments and their specific parameters.
 The BenchPilot model is composed with <i>Experiments</i>, where <i>Workloads</i> are described. Each workload can have the following:
-- <strong>name</strong>, which will be selected from the supported workload list. 
-- <strong>record name</strong>, so that the user can later on retrieve its monitored metrics based on it
-- <strong>number of repetitions</strong>,
-- <strong>duration</strong>, 
+- <strong style="color: #40897B">name</strong>, which will be selected from the supported workload list. 
+- <strong style="color: #40897B">record name</strong>, so that the user can later on retrieve its monitored metrics based on it
+- <strong style="color: #40897B">number of repetitions</strong>,
+- <strong style="color: #40897B">duration</strong>, 
 - specific workload <strong>parameters</strong>, 
-- <strong>cluster</strong> configurations including the manager node's IP, list of cluster nodes, etc. 
-- <strong>engine</strong> configurations, in case of streaming distributed-based workloads
+- <strong style="color: #40897B">cluster</strong> configurations including the manager node's IP, list of cluster nodes, etc. 
+- <strong style="color: #40897B">engine</strong> configurations, in case of streaming distributed-based workloads
 
 ### <strong>Deployment</strong>
 When the description is ready, the user deploys the application using the BenchPilotSDK through a Jupyter notebook.
@@ -39,7 +43,7 @@ To create an end-to-end interactive analytic tool for benchmarking, BenchPilot u
 As for now BenchPilot only supports the following containerized workloads:
 |Name|Description|Specific Configuration Parameters|
 |----|-----------|---------------------------------|
-|marketing-campaign| A streaming distributed workload that features an application as a data processing pipeline with multiple and diverse steps that emulate insight extraction from marketing campaigns. The workload utilizes technologies such as Kafka and Redis. | <ul><li><i>campaigns</i>, which is the number of campaigns, the default number is 1000,</li> <li><i>tuples_per_second</i>, the number of emitted tuples per second, the default is 10000</li> <li><i>kafka_event_count</i>, the number of generated and published events on kafka, the default is 1000000</li> <li><i>maximize_data</i>, this attribute is used to automatically maximize the data that are critically affecting the workload's performance, the input that the user can put is in the format of x10, x100, etc.</li></ul>
+|<span style="color: #40897B">marketing-campaign</span>| A streaming distributed workload that features an application as a data processing pipeline with multiple and diverse steps that emulate insight extraction from marketing campaigns. The workload utilizes technologies such as Kafka and Redis. | <ul><li><i>campaigns</i>, which is the number of campaigns, the default number is 1000,</li> <li><i>tuples_per_second</i>, the number of emitted tuples per second, the default is 10000</li> <li><i>kafka_event_count</i>, the number of generated and published events on kafka, the default is 1000000</li> <li><i>maximize_data</i>, this attribute is used to automatically maximize the data that are critically affecting the workload's performance, the input that the user can put is in the format of x10, x100, etc.</li></ul>
 
 <strong>It's important to note that BenchPilot can be easily extended to add new workloads.</strong>
 
@@ -55,12 +59,12 @@ In the case of streaming distributed workloads, the user needs to define specifi
 ````
 
 For each Streaming Distributed Processing Engine, the following attributes can be specified:
-<table>
+<table style="overflow: visible" >
   <tr align="center" style="border-bottom: 0.5px solid grey">
     <th style="border-right: 1px solid white; border-bottom: 0.5px solid white">Engine</th>
-    <td style="border-bottom: 0.5px solid white"><strong>Storm</strong></td>
-    <td style="border-bottom: 0.5px solid white"><strong>Flink</strong></td>
-    <td style="border-bottom: 0.5px solid white"><strong>Spark</strong></td>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Storm</strong></td>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Flink</strong></td>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Spark</strong></td>
   </tr>
   <tr>
     <th style="border-right: 1px solid white; border-bottom: none">Parameters</th>
@@ -83,3 +87,5 @@ and by the Cyprus Research and Innovation Foundation through COMPLEMENTARY/0916/
 
 ### <strong>License</strong>
 The framework is open-sourced under the Apache 2.0 License base. The codebase of the framework is maintained by the authors for academic research and is therefore provided "as is".
+
+<span style="color: #40897B">** **More information coming soon** **</span>
