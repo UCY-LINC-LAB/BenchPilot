@@ -1,0 +1,7 @@
+requests
+PyYAML
+redis
+docker
+pandas
+paramiko
+prometheus-pandas

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Workloads #  As for now BenchPilot only supports the following containerized workloads:
+   Name Description Specific Configuration Parameters     marketing-campaign A streaming distributed workload that features an application as a data processing pipeline with multiple and diverse steps that emulate insight extraction from marketing campaigns. The workload utilizes technologies such as Kafka and Redis. campaigns, which is the number of campaigns, the default number is 1000, tuples_per_second, the number of emitted tuples per second, the default is 10000 kafka_event_count, the number of generated and published events on kafka, the default is 1000000 maximize_data, this attribute is used to automatically maximize the data that are critically affecting the workload&rsquo;s performance, the input that the user can put is in the format of x10, x100, etc.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="Workloads" />
+<meta property="og:description" content="Workloads #  As for now BenchPilot only supports the following containerized workloads:
+   Name Description Specific Configuration Parameters     marketing-campaign A streaming distributed workload that features an application as a data processing pipeline with multiple and diverse steps that emulate insight extraction from marketing campaigns. The workload utilizes technologies such as Kafka and Redis. campaigns, which is the number of campaigns, the default number is 1000, tuples_per_second, the number of emitted tuples per second, the default is 10000 kafka_event_count, the number of generated and published events on kafka, the default is 1000000 maximize_data, this attribute is used to automatically maximize the data that are critically affecting the workload&rsquo;s performance, the input that the user can put is in the format of x10, x100, etc." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ucy-linc-lab.github.io/BenchPilot/docs/workloads/" /><meta property="article:section" content="docs" />
+
+
+
+<title>Workloads | BenchPilot</title>
+<link rel="manifest" href="/BenchPilot/manifest.json">
+<link rel="icon" href="/BenchPilot/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/BenchPilot/book.min.fb69d0e92fcd17fb4042199e803e6bfa0ec2c53ccb74bf57e949532662854dff.css" integrity="sha256-&#43;2nQ6S/NF/tAQhmegD5r&#43;g7CxTzLdL9X6UlTJmKFTf8=" crossorigin="anonymous">
+  <script defer src="/BenchPilot/flexsearch.min.js"></script>
+  <script defer src="/BenchPilot/en.search.min.fd8f4b8988d948a37a24c55e5b4dde32873008b060974b87c0ef24cd0f14c52b.js" integrity="sha256-/Y9LiYjZSKN6JMVeW03eMocwCLBgl0uHwO8kzQ8UxSs=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/BenchPilot/"><img src="/BenchPilot/images/plane.png" alt="Logo" /><span>BenchPilot</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/getting-started/" class="">Getting Started</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/installation/" class="">Installation</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiments/" class="">Experiments</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/workloads/" class="active">Workloads</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/monitoring/" class="">Monitoring</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiment-analysis/" class="">Post-Experiment Analysis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/exteding-framework/" class="">Exteding BenchPilot</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="http://linc.ucy.ac.cy" target="_blank" rel="noopener">
+        About Us
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/BenchPilot/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Workloads</strong>
+
+  <label for="toc-control">
+    
+    <img src="/BenchPilot/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#strongdistributed-processing-engine-parametersstrong"><strong>Distributed Processing Engine Parameters</strong></a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="strong-stylecolor-40897bworkloadsstrong">
+  <strong style="color: #40897B">Workloads</strong>
+  <a class="anchor" href="#strong-stylecolor-40897bworkloadsstrong">#</a>
+</h1>
+<p>As for now BenchPilot only supports the following containerized workloads:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Specific Configuration Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="color: #40897B">marketing-campaign</span></td>
+<td>A streaming distributed workload that features an application as a data processing pipeline with multiple and diverse steps that emulate insight extraction from marketing campaigns. The workload utilizes technologies such as Kafka and Redis.</td>
+<td><ul><li><i>campaigns</i>, which is the number of campaigns, the default number is 1000,</li> <li><i>tuples_per_second</i>, the number of emitted tuples per second, the default is 10000</li> <li><i>kafka_event_count</i>, the number of generated and published events on kafka, the default is 1000000</li> <li><i>maximize_data</i>, this attribute is used to automatically maximize the data that are critically affecting the workload&rsquo;s performance, the input that the user can put is in the format of x10, x100, etc.</li></ul></td>
+</tr>
+</tbody>
+</table>
+<h2 id="strongdistributed-processing-engine-parametersstrong">
+  <strong>Distributed Processing Engine Parameters</strong>
+  <a class="anchor" href="#strongdistributed-processing-engine-parametersstrong">#</a>
+</h2>
+<p>In the case of streaming distributed workloads, the user needs to define specific engine parameters in their experiments.</p>
+<p>For each Streaming Distributed Processing Engine, the following attributes can be specified:</p>
+<table style="overflow: visible" >
+  <tr align="center" style="border-bottom: 0.5px solid grey">
+    <th style="border-right: 1px solid white; border-bottom: 0.5px solid white">Engine</th>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Storm</strong></td>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Flink</strong></td>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Spark</strong></td>
+  </tr>
+  <tr>
+    <th style="border-right: 1px solid white; border-bottom: none">Parameters</th>
+    <td><ol><li>partitions</li><li>ackers</li></ol></td>
+    <td><ol><li>partitions</li><li>buffer_timeout</li><li>checkpoint_interval</li></ol></td>
+    <td><ol><li>partitions</li><li>batchtime</li><li>executor_cores</li><li>executor_memory</li></ol></td>
+  </tr>
+</table>
+<p><strong>It&rsquo;s important to note that BenchPilot can be easily extended to add new workloads.</strong></p>
+<p>For extending BenchPilot check this <a href="https://ucy-linc-lab.github.io/BenchPilot/docs/getting-framework/">section</a> out.</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(n){const e=window.getSelection(),t=document.createRange();t.selectNodeContents(n),e.removeAllRanges(),e.addRange(t)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#strongdistributed-processing-engine-parametersstrong"><strong>Distributed Processing Engine Parameters</strong></a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="GitHub Repository #  Visit our Github Repository  to download or fork BenchPilot!
 DockerHub #  All of our Docker images are uploaded on our DockerHub Repository!
-BenchPilot Bootstrapping #  Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images.">
+BenchPilot Bootstrapping #  Install Docker &amp; Docker Compose #  In the &lsquo;Getting Started&rsquo; section we learned how BenchPilot is structured. In order to use the BenchPilot client you need to have installed docker &amp; docker-compose. In our GitHub Repository, under the /utils folder we have prepared for you a script to automatically download it, so all you need to run is &ldquo;sh install-docker.">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="color-scheme" content="light dark"><meta property="og:title" content="Installation" />
 <meta property="og:description" content="GitHub Repository #  Visit our Github Repository  to download or fork BenchPilot!
 DockerHub #  All of our Docker images are uploaded on our DockerHub Repository!
-BenchPilot Bootstrapping #  Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images." />
+BenchPilot Bootstrapping #  Install Docker &amp; Docker Compose #  In the &lsquo;Getting Started&rsquo; section we learned how BenchPilot is structured. In order to use the BenchPilot client you need to have installed docker &amp; docker-compose. In our GitHub Repository, under the /utils folder we have prepared for you a script to automatically download it, so all you need to run is &ldquo;sh install-docker." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://ucy-linc-lab.github.io/BenchPilot/docs/installation/" /><meta property="article:section" content="docs" />
 
@@ -21,7 +21,7 @@ BenchPilot Bootstrapping #  Before the experimentation phase starts, a necessary
 <link rel="icon" href="/BenchPilot/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/BenchPilot/book.min.fb69d0e92fcd17fb4042199e803e6bfa0ec2c53ccb74bf57e949532662854dff.css" integrity="sha256-&#43;2nQ6S/NF/tAQhmegD5r&#43;g7CxTzLdL9X6UlTJmKFTf8=" crossorigin="anonymous">
   <script defer src="/BenchPilot/flexsearch.min.js"></script>
-  <script defer src="/BenchPilot/en.search.min.79080ae461d2ccb33ac33c60bccde77d6540b19970f48e426485938d3db63370.js" integrity="sha256-eQgK5GHSzLM6wzxgvM3nfWVAsZlw9I5CZIWTjT22M3A=" crossorigin="anonymous"></script>
+  <script defer src="/BenchPilot/en.search.min.fd8f4b8988d948a37a24c55e5b4dde32873008b060974b87c0ef24cd0f14c52b.js" integrity="sha256-/Y9LiYjZSKN6JMVeW03eMocwCLBgl0uHwO8kzQ8UxSs=" crossorigin="anonymous"></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -92,6 +92,71 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiments/" class="">Experiments</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/workloads/" class="">Workloads</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/monitoring/" class="">Monitoring</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiment-analysis/" class="">Post-Experiment Analysis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/exteding-framework/" class="">Exteding BenchPilot</a>
+  
+
+        </li>
+      
+    
   </ul>
 
 
@@ -154,7 +219,18 @@ https://github.com/alex-shpak/hugo-book
   <aside class="hidden clearfix">
     
   
-<nav id="TableOfContents"></nav>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#install-docker--docker-compose">Install Docker &amp; Docker Compose</a></li>
+    <li><a href="#retrieve-or-build-benchpilot-client-image">Retrieve or Build BenchPilot Client Image</a>
+      <ul>
+        <li><a href="#pulling-image-from-dockerhub">Pulling Image from DockerHub</a></li>
+        <li><a href="#building-image-locally">Building Image Locally</a></li>
+      </ul>
+    </li>
+    <li><a href="#start-benchpilot-client-and-start-experimenting">Start BenchPilot Client and start experimenting!</a></li>
+  </ul>
+</nav>
 
 
 
@@ -179,9 +255,57 @@ https://github.com/alex-shpak/hugo-book
   <strong style="color: #40897B">BenchPilot Bootstrapping</strong>
   <a class="anchor" href="#strong-stylecolor-40897bbenchpilot-bootstrappingstrong">#</a>
 </h1>
-<p>Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images.</p>
-<!-- For the script to work properly, the user needs to provide a list of essential information about the cluster in the '/conf/bench-cluster-setup.yaml'. Specifically, it's essential to fill each node's <i>hostname</i>, which can be either the machine's IP or hostname that will be reachable from the device BenchPilot is running from, a <i>username</i>, and either an <i>ssh key path</i> or a <i>password</i>. The latter allows BenchPilot to connect and install all necessary software dependencies across the cluster. -->
-<p>This step is required only for the first time of the BenchPilot installation or in case of a hardware update, e.g., introducing a new device.</p>
+<h2 id="install-docker--docker-compose">
+  Install Docker &amp; Docker Compose
+  <a class="anchor" href="#install-docker--docker-compose">#</a>
+</h2>
+<p>In the &lsquo;Getting Started&rsquo; section we learned how BenchPilot is structured. In order to use the BenchPilot client you need to have installed docker &amp; docker-compose. In our GitHub Repository, under the <em>/utils</em> folder we have prepared for you a script to automatically download it, so all you need to run is &ldquo;<strong><code style="color: #40897B">sh install-docker.sh</code></strong>&rdquo;.</p>
+<h2 id="retrieve-or-build-benchpilot-client-image">
+  Retrieve or Build BenchPilot Client Image
+  <a class="anchor" href="#retrieve-or-build-benchpilot-client-image">#</a>
+</h2>
+<p>The second step is to either retrieve or build the BenchPilot client image.</p>
+<h3 id="pulling-image-from-dockerhub">
+  Pulling Image from DockerHub
+  <a class="anchor" href="#pulling-image-from-dockerhub">#</a>
+</h3>
+<p>For your ease, you can only pull the image from DockerHub just by running &ldquo;<strong><code style="color: #40897B">docker pull benchpilot/benchpilot:client</code></strong>&rdquo;.</p>
+<h3 id="building-image-locally">
+  Building Image Locally
+  <a class="anchor" href="#building-image-locally">#</a>
+</h3>
+<p>If you want to build the image locally, you firstly need to download or clone our <a href="https://github.com/UCY-LINC-LAB/BenchPilot">GitHub repository</a> and then execute the building image script by running the command &ldquo;<strong><code style="color: #40897B">sh build-image.sh</code></strong>&rdquo;.</p>
+<h2 id="start-benchpilot-client-and-start-experimenting">
+  Start BenchPilot Client and start experimenting!
+  <a class="anchor" href="#start-benchpilot-client-and-start-experimenting">#</a>
+</h2>
+<p>The final step is to just execute the following docker-compose.yaml by running the simple command &ldquo;<strong><code style="color: #40897B">docker-compose up</code></strong>&rdquo;. It is not needed from you to be familiarized with docker and docker-compose, but in case you want to learn more, you can always visit their <a href="https://docs.docker.com/">website</a>!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">version</span>: <span style="color:#e6db74">&#39;3.8&#39;</span> <span style="color:#75715e"># change it accordingly to your docker-compose version</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">benchpilot</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># if you chose to build it locally replace the it with: bench-pilot</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">benchpilot/benchpilot:client </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">/var/run/docker.sock:/var/run/docker.sock</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">/usr/bin/docker:/usr/bin/docker</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">8888</span>:<span style="color:#ae81ff">8888</span> <span style="color:#75715e"># port needed for jupyter</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># define http(s)_proxy only if your devide is placed behind a proxy</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">http_proxy=${http_proxy}</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">https_proxy=${https_proxy}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># jupyter environment variables</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;JUPYTER_ENABLE_LAB=yes&#34;</span> 
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;GRANT_SUDO=yes&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;CHOWN_HOME=yes&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Prometheus environment variables</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">PROMETHEUS_IP=0.0.0.0</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">PROMETHEUS_PREFIX=${your_datacenter_prefix}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">user</span>: <span style="color:#ae81ff">root</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># command to start jupyter</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">command</span>: [<span style="color:#e6db74">&#34;jupyter&#34;</span>, <span style="color:#e6db74">&#34;notebook&#34;</span>, <span style="color:#e6db74">&#34;--ip=&#39;0.0.0.0&#39;&#34;</span>, <span style="color:#e6db74">&#34;--port=8888&#34;</span>, <span style="color:#e6db74">&#34;--no-browser&#34;</span>, <span style="color:#e6db74">&#34;--allow-root&#34;</span>, <span style="color:#e6db74">&#34;--NotebookApp.token=&#39;&#39;&#34;</span>, <span style="color:#e6db74">&#34;--NotebookApp.password=&#39;&#39;&#34;</span>]
+</span></span></code></pre></div><p>After starting the BenchPilot client, you can access jupyter through your browser from this link: &ldquo;<strong><code style="color: #40897B">http://your_device_ip:8888</code></strong>&rdquo;, and start experimenting!</p>
+<p><a href="https://ucy-linc-lab.github.io/BenchPilot/docs/experiments/"> Learn how to define your experiments here.</a></p>
 </article>
  
       
@@ -221,7 +345,18 @@ https://github.com/alex-shpak/hugo-book
       <div class="book-toc-content">
         
   
-<nav id="TableOfContents"></nav>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#install-docker--docker-compose">Install Docker &amp; Docker Compose</a></li>
+    <li><a href="#retrieve-or-build-benchpilot-client-image">Retrieve or Build BenchPilot Client Image</a>
+      <ul>
+        <li><a href="#pulling-image-from-dockerhub">Pulling Image from DockerHub</a></li>
+        <li><a href="#building-image-locally">Building Image Locally</a></li>
+      </ul>
+    </li>
+    <li><a href="#start-benchpilot-client-and-start-experimenting">Start BenchPilot Client and start experimenting!</a></li>
+  </ul>
+</nav>
 
 
  

@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  benchpilot:
+    image: benchpilot/benchpilot:client
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - ./benchPilotNote.ipynb:/benchPilotNote.ipynb
+    ports:
+      - 8888:8888
+    environment:
+      - "JUPYTER_ENABLE_LAB=yes"
+      - "GRANT_SUDO=yes"
+      - "CHOWN_HOME=yes"
+      - PROMETHEUS_IP=0.0.0.0
+      - PROMETHEUS_PREFIX=${your_datacenter_prefix}
+    user: root
+    command: ["jupyter", "notebook", "--ip='0.0.0.0'", "--port=8888", "--no-browser", "--allow-root"]
+

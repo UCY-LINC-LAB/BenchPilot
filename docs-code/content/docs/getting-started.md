@@ -47,33 +47,6 @@ As for now BenchPilot only supports the following containerized workloads:
 
 <strong>It's important to note that BenchPilot can be easily extended to add new workloads.</strong>
 
-#### <strong>Engine Parameters</strong>
-In the case of streaming distributed workloads, the user needs to define specific engine parameters along with their experiment declaration. The structure should be as the example below:
-````yaml
-   engine:
-      name: "storm"
-      parameters:
-         partitions: 5
-         ackers: 2
-         executors_per_node: [ 4, 4, 4, 4, 16 ]
-````
-
-For each Streaming Distributed Processing Engine, the following attributes can be specified:
-<table style="overflow: visible" >
-  <tr align="center" style="border-bottom: 0.5px solid grey">
-    <th style="border-right: 1px solid white; border-bottom: 0.5px solid white">Engine</th>
-    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Storm</strong></td>
-    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Flink</strong></td>
-    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Spark</strong></td>
-  </tr>
-  <tr>
-    <th style="border-right: 1px solid white; border-bottom: none">Parameters</th>
-    <td><ol><li>partitions</li><li>ackers</li><li>executors_per_node</li></ol></td>
-    <td><ol><li>partitions</li><li>buffer_timeout</li><li>checkpoint_interval</li></ol></td>
-    <td><ol><li>partitions</li><li>batchtime</li><li>executor_cores</li><li>executor_memory</li></ol></td>
-  </tr>
-</table>
-
 ## <strong>Resources</strong>
 
 ### <strong>The Team</strong>
@@ -88,4 +61,4 @@ and by the Cyprus Research and Innovation Foundation through COMPLEMENTARY/0916/
 ### <strong>License</strong>
 The framework is open-sourced under the Apache 2.0 License base. The codebase of the framework is maintained by the authors for academic research and is therefore provided "as is".
 
-<span style="color: #40897B">** **More information coming soon** **</span>
+<a href="https://ucy-linc-lab.github.io/BenchPilot/docs/installation/"><strong>Start experimenting by installing Benchpilot now!</strong></span>

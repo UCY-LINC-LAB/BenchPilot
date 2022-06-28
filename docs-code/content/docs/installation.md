@@ -16,6 +16,48 @@ Visit our <a href="https://github.com/UCY-LINC-LAB/BenchPilot"> Github Repositor
 All of our Docker images are uploaded on our <a href="https://hub.docker.com/r/benchpilot/benchpilot"> DockerHub Repository</a>!
 
 # <strong style="color: #40897B">BenchPilot Bootstrapping</strong>
-Before the experimentation phase starts, a necessary bootstrapping needs to be done. The BenchPilot user only needs to execute a parameterizable installation script of Benchpilot on every cluster node. The script installs all necessary software dependencies across the micro-DC and downloads the required workload docker images.
-<!-- For the script to work properly, the user needs to provide a list of essential information about the cluster in the '/conf/bench-cluster-setup.yaml'. Specifically, it's essential to fill each node's <i>hostname</i>, which can be either the machine's IP or hostname that will be reachable from the device BenchPilot is running from, a <i>username</i>, and either an <i>ssh key path</i> or a <i>password</i>. The latter allows BenchPilot to connect and install all necessary software dependencies across the cluster. -->
-This step is required only for the first time of the BenchPilot installation or in case of a hardware update, e.g., introducing a new device.
+## Install Docker & Docker Compose
+In the 'Getting Started' section we learned how BenchPilot is structured. In order to use the BenchPilot client you need to have installed docker & docker-compose. In our GitHub Repository, under the <em>/utils</em> folder we have prepared for you a script to automatically download it, so all you need to run is "<strong><code style="color: #40897B">sh install-docker.sh</code></strong>".
+
+## Retrieve or Build BenchPilot Client Image
+The second step is to either retrieve or build the BenchPilot client image. 
+
+### Pulling Image from DockerHub
+For your ease, you can only pull the image from DockerHub just by running "<strong><code style="color: #40897B">docker pull benchpilot/benchpilot:client</code></strong>".
+
+### Building Image Locally
+If you want to build the image locally, you firstly need to download or clone our <a href="https://github.com/UCY-LINC-LAB/BenchPilot">GitHub repository</a> and then execute the building image script by running the command "<strong><code style="color: #40897B">sh build-image.sh</code></strong>".
+
+## Start BenchPilot Client and start experimenting!
+The final step is to just execute the following docker-compose.yaml by running the simple command "<strong><code style="color: #40897B">docker-compose up</code></strong>". It is not needed from you to be familiarized with docker and docker-compose, but in case you want to learn more, you can always visit their <a href="https://docs.docker.com/">website</a>!
+
+````yaml
+version: '3.8' # change it accordingly to your docker-compose version
+services:
+  benchpilot:
+    # if you chose to build it locally replace the it with: bench-pilot
+    image: benchpilot/benchpilot:client 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    ports:
+      - 8888:8888 # port needed for jupyter
+    environment:
+    # define http(s)_proxy only if your devide is placed behind a proxy
+      - http_proxy=${http_proxy}
+      - https_proxy=${https_proxy}
+    # jupyter environment variables
+      - "JUPYTER_ENABLE_LAB=yes" 
+      - "GRANT_SUDO=yes"
+      - "CHOWN_HOME=yes"
+    # Prometheus environment variables
+      - PROMETHEUS_IP=0.0.0.0
+      - PROMETHEUS_PREFIX=${your_datacenter_prefix}
+    user: root
+    # command to start jupyter
+    command: ["jupyter", "notebook", "--ip='0.0.0.0'", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+````
+
+After starting the BenchPilot client, you can access jupyter through your browser from this link: "<strong><code style="color: #40897B">http://your_device_ip:8888</code></strong>", and start experimenting!
+
+<a href="https://ucy-linc-lab.github.io/BenchPilot/docs/experiments/"> Learn how to define your experiments here.</a>

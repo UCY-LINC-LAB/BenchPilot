@@ -1,0 +1,73 @@
+version: '3.3'
+services:
+  #Define the Consul service
+  benchpilot_consul:
+    image: consul
+    hostname: benchpilot_consul
+    environment:
+      CONSUL_LOCAL_CONFIG: '{"skip_leave_on_interrupt": true}'
+    volumes:
+      - benchpilot_consul_data:/consul/data
+    ports:
+      - 8300:8300
+      - 8301:8301
+      - 8301:8301/udp
+      - 8500:8500
+      - 8600:8600
+      - 8600:8600/udp
+      - 11153:53/udp
+    restart: on-failure
+    command: agent -ui -data-dir /consul/data -server -bootstrap-expect 1 -bind=127.0.0.1  -client=0.0.0.0
+
+  # Define a Prometheus service
+  benchpilot_prometheus:
+    image: prom/prometheus:latest
+    hostname: benchpilot_prometheus
+    ports:
+      - 9090:9090
+    command: --storage.tsdb.retention.time=365d --storage.tsdb.retention.size=200GB --web.enable-lifecycle
+    volumes:
+      - benchpilot_prometheus:/prometheus
+    restart: always
+
+    # Define an InfluxDB service
+  influxdb:
+    image: influxdb
+    volumes:
+      - $HOME/influxdata/data/influxdb:/var/lib/influxdb
+    ports:
+      - 8082:8082
+      - 8086:8086
+      - 8089:8089
+    environment:
+      - INFLUXDB_DB="${database_name}"
+      - INFLUXDB_ADMIN_USER="${admin_username}"
+      - INFLUXDB_ADMIN_PASSWORD="${admin_password}"
+    restart: always
+
+    # Define Prometheus - InfluxDB Adapter
+  prometheus-influxdb-adapter:
+    image: kaorimatz/prometheus-influxdb-adapter
+    ports:
+      - 9201:9201
+    environment:
+      - WRITE_INFLUXDB_URL=http://prometheus:password@influxdb:8086
+    command: [
+      "--log.level=debug",
+      "--read.influxdb.field=max_over_time:max",
+      "--read.influxdb.field=min_over_time:min",
+      "--read.influxdb.field=sum_over_time:sum",
+      "--read.influxdb.field=mean",
+      "--read.influxdb.retention-policy=1h:1h",
+      "--read.influxdb.retention-policy=5m:5m",
+      "--read.influxdb.retention-policy=1m",
+      "--read.influxdb.rpc-address=influxdb:8082",
+    ]
+    depends_on:
+      - influxdb
+
+volumes:
+  benchpilot_consul_data:
+    external: true
+  benchpilot_prometheus:
+    external: true

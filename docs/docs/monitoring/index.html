@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="BenchPilot Monitoring System #  BenchPilot Monitoring divides its services on the Control Plane, where BenchPilot Client and core monitoring services will run on, and its workers, where the benchmarking will happen.
+On the Control Plane, BenchPilot reuses the following existing projects:
+ Consul, for service registration Prometheus, for keeping metrics Influxdb, for long-term storing metrics  On each Worker device, BenchPilot uses Netdata for capturing its metrics, and meross smart plugs for retrieving energy consumption.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="Monitoring" />
+<meta property="og:description" content="BenchPilot Monitoring System #  BenchPilot Monitoring divides its services on the Control Plane, where BenchPilot Client and core monitoring services will run on, and its workers, where the benchmarking will happen.
+On the Control Plane, BenchPilot reuses the following existing projects:
+ Consul, for service registration Prometheus, for keeping metrics Influxdb, for long-term storing metrics  On each Worker device, BenchPilot uses Netdata for capturing its metrics, and meross smart plugs for retrieving energy consumption." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ucy-linc-lab.github.io/BenchPilot/docs/monitoring/" /><meta property="article:section" content="docs" />
+
+
+
+<title>Monitoring | BenchPilot</title>
+<link rel="manifest" href="/BenchPilot/manifest.json">
+<link rel="icon" href="/BenchPilot/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/BenchPilot/book.min.fb69d0e92fcd17fb4042199e803e6bfa0ec2c53ccb74bf57e949532662854dff.css" integrity="sha256-&#43;2nQ6S/NF/tAQhmegD5r&#43;g7CxTzLdL9X6UlTJmKFTf8=" crossorigin="anonymous">
+  <script defer src="/BenchPilot/flexsearch.min.js"></script>
+  <script defer src="/BenchPilot/en.search.min.fd8f4b8988d948a37a24c55e5b4dde32873008b060974b87c0ef24cd0f14c52b.js" integrity="sha256-/Y9LiYjZSKN6JMVeW03eMocwCLBgl0uHwO8kzQ8UxSs=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/BenchPilot/"><img src="/BenchPilot/images/plane.png" alt="Logo" /><span>BenchPilot</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/getting-started/" class="">Getting Started</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/installation/" class="">Installation</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiments/" class="">Experiments</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/workloads/" class="">Workloads</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/monitoring/" class="active">Monitoring</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiment-analysis/" class="">Post-Experiment Analysis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/exteding-framework/" class="">Exteding BenchPilot</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="http://linc.ucy.ac.cy" target="_blank" rel="noopener">
+        About Us
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/BenchPilot/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Monitoring</strong>
+
+  <label for="toc-control">
+    
+    <img src="/BenchPilot/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#strongsetup-monitoring-systemstrong"><strong>Setup Monitoring System</strong></a>
+      <ul>
+        <li><a href="#stronginstall-docker--docker-composestrong"><strong>Install Docker &amp; Docker Compose</strong></a></li>
+        <li><a href="#strongstart-control-plane-servicesstrong"><strong>Start Control-Plane Services</strong></a></li>
+        <li><a href="#strongstart-worker-servicesstrong"><strong>Start Worker Services</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="strong-stylecolor-40897bbenchpilot-monitoring-systemstrong">
+  <strong style="color: #40897B">BenchPilot Monitoring System</strong>
+  <a class="anchor" href="#strong-stylecolor-40897bbenchpilot-monitoring-systemstrong">#</a>
+</h1>
+<p>BenchPilot Monitoring divides its services on the <strong>Control Plane</strong>, where BenchPilot Client and core monitoring services will run on, and its <strong>workers</strong>, where the benchmarking will happen.</p>
+<p>On the <strong>Control Plane</strong>, BenchPilot reuses the following existing projects:</p>
+<ul>
+<li><em><a href="https://www.consul.io/">Consul</a></em>, for service registration</li>
+<li><em><a href="https://prometheus.io/">Prometheus</a></em>, for keeping metrics</li>
+<li><em><a href="https://www.influxdata.com/">Influxdb</a></em>, for long-term storing metrics</li>
+</ul>
+<p>On each <strong>Worker</strong> device, BenchPilot uses <em><a href="https://www.netdata.cloud/">Netdata</a></em> for capturing its metrics, and meross smart plugs for retrieving energy consumption. You can use any smart plug you wish for capturing energy consumption by exposing its measures to Netdata.</p>
+<p>Every file that you may need for the monitoring stack, you can find in our repository, under the &ldquo;monitoring&rdquo; folder.</p>
+<h2 id="strongsetup-monitoring-systemstrong">
+  <strong>Setup Monitoring System</strong>
+  <a class="anchor" href="#strongsetup-monitoring-systemstrong">#</a>
+</h2>
+<p>First of all you need to download or clone our <a href="https://github.com/UCY-LINC-LAB/BenchPilot">GitHub Repository</a>.</p>
+<h3 id="stronginstall-docker--docker-composestrong">
+  <strong>Install Docker &amp; Docker Compose</strong>
+  <a class="anchor" href="#stronginstall-docker--docker-composestrong">#</a>
+</h3>
+<p>If you haven&rsquo;t installed docker and docker-compose on your devices yet (control plane &amp; workers), just execute the following command on each one of them:</p>
+<pre tabindex="0"><code>sh install-docker.sh
+</code></pre><h3 id="strongstart-control-plane-servicesstrong">
+  <strong>Start Control-Plane Services</strong>
+  <a class="anchor" href="#strongstart-control-plane-servicesstrong">#</a>
+</h3>
+<p>When you have docker and docker-compose installed, all you need to run on the <strong>Control Plane</strong> the following command:</p>
+<pre tabindex="0"><code>docker-compose up -f docker-compose-monitoring.yaml
+</code></pre><p><em>Don&rsquo;t forget to replace the environment variables however you would wish to (e.g. &ldquo;${database_name}&rdquo;)</em></p>
+<h3 id="strongstart-worker-servicesstrong">
+  <strong>Start Worker Services</strong>
+  <a class="anchor" href="#strongstart-worker-servicesstrong">#</a>
+</h3>
+<p>On each <strong>Worker</strong> you can start and setup Netdata by just running:</p>
+<pre tabindex="0"><code>docker-compose up -f docker-compose.yaml
+</code></pre><p><em>Keep in mind, that you need to define the smart plug&rsquo;s ip.</em></p>
+<h4 id="strongchanging-smart-plug-configurationstrong">
+  <strong>Changing smart plug configuration</strong>
+  <a class="anchor" href="#strongchanging-smart-plug-configurationstrong">#</a>
+</h4>
+<p>There are two things needed for this process:</p>
+<ol>
+<li>First you should <strong style="color: #40897B">remove/change the &ldquo;smart-plug&rdquo; service</strong> from docker-compose.yaml</li>
+<li><strong style="color: #40897B">Update the netdata/prometheus.conf</strong>. You should update accordingly the &ldquo;smart_plug&rdquo; configuration, which is defined in the end of the &ldquo;prometheus.conf&rdquo;. This setup if for exposing its metrics to netdata.</li>
+</ol>
+<h4 id="strongregister-worker-nodes-to-consulstrong">
+  <strong>Register Worker nodes to Consul</strong>
+  <a class="anchor" href="#strongregister-worker-nodes-to-consulstrong">#</a>
+</h4>
+<p>On each worker, after you have started the worker services, just enter the <strong>Consul</strong> folder and execute the following command:</p>
+<pre tabindex="0"><code>sh consul/register_to_consul.sh
+</code></pre><p><em>Please, don&rsquo;t forget to replace the IPs in the script with your IPs (Consul Ip, and worker device IP)</em></p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(n){const e=window.getSelection(),t=document.createRange();t.selectNodeContents(n),e.removeAllRanges(),e.addRange(t)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#strongsetup-monitoring-systemstrong"><strong>Setup Monitoring System</strong></a>
+      <ul>
+        <li><a href="#stronginstall-docker--docker-composestrong"><strong>Install Docker &amp; Docker Compose</strong></a></li>
+        <li><a href="#strongstart-control-plane-servicesstrong"><strong>Start Control-Plane Services</strong></a></li>
+        <li><a href="#strongstart-worker-servicesstrong"><strong>Start Worker Services</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -19,7 +19,7 @@ BenchPilot is a modular and highly customizable benchmarking framework for edge 
 <link rel="icon" href="/BenchPilot/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/BenchPilot/book.min.fb69d0e92fcd17fb4042199e803e6bfa0ec2c53ccb74bf57e949532662854dff.css" integrity="sha256-&#43;2nQ6S/NF/tAQhmegD5r&#43;g7CxTzLdL9X6UlTJmKFTf8=" crossorigin="anonymous">
   <script defer src="/BenchPilot/flexsearch.min.js"></script>
-  <script defer src="/BenchPilot/en.search.min.79080ae461d2ccb33ac33c60bccde77d6540b19970f48e426485938d3db63370.js" integrity="sha256-eQgK5GHSzLM6wzxgvM3nfWVAsZlw9I5CZIWTjT22M3A=" crossorigin="anonymous"></script>
+  <script defer src="/BenchPilot/en.search.min.fd8f4b8988d948a37a24c55e5b4dde32873008b060974b87c0ef24cd0f14c52b.js" integrity="sha256-/Y9LiYjZSKN6JMVeW03eMocwCLBgl0uHwO8kzQ8UxSs=" crossorigin="anonymous"></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -85,6 +85,71 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="/BenchPilot/docs/installation/" class="">Installation</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiments/" class="">Experiments</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/workloads/" class="">Workloads</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/monitoring/" class="">Monitoring</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiment-analysis/" class="">Post-Experiment Analysis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/exteding-framework/" class="">Exteding BenchPilot</a>
   
 
         </li>
@@ -245,32 +310,6 @@ If there&rsquo;s no validation error from the description, the Parser will parse
 </tbody>
 </table>
 <p><strong>It&rsquo;s important to note that BenchPilot can be easily extended to add new workloads.</strong></p>
-<h4 id="strongengine-parametersstrong">
-  <strong>Engine Parameters</strong>
-  <a class="anchor" href="#strongengine-parametersstrong">#</a>
-</h4>
-<p>In the case of streaming distributed workloads, the user needs to define specific engine parameters along with their experiment declaration. The structure should be as the example below:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>   <span style="color:#f92672">engine</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;storm&#34;</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">parameters</span>:
-</span></span><span style="display:flex;"><span>         <span style="color:#f92672">partitions</span>: <span style="color:#ae81ff">5</span>
-</span></span><span style="display:flex;"><span>         <span style="color:#f92672">ackers</span>: <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>         <span style="color:#f92672">executors_per_node</span>: [ <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">16</span> ]
-</span></span></code></pre></div><p>For each Streaming Distributed Processing Engine, the following attributes can be specified:</p>
-<table style="overflow: visible" >
-  <tr align="center" style="border-bottom: 0.5px solid grey">
-    <th style="border-right: 1px solid white; border-bottom: 0.5px solid white">Engine</th>
-    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Storm</strong></td>
-    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Flink</strong></td>
-    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Spark</strong></td>
-  </tr>
-  <tr>
-    <th style="border-right: 1px solid white; border-bottom: none">Parameters</th>
-    <td><ol><li>partitions</li><li>ackers</li><li>executors_per_node</li></ol></td>
-    <td><ol><li>partitions</li><li>buffer_timeout</li><li>checkpoint_interval</li></ol></td>
-    <td><ol><li>partitions</li><li>batchtime</li><li>executor_cores</li><li>executor_memory</li></ol></td>
-  </tr>
-</table>
 <h2 id="strongresourcesstrong">
   <strong>Resources</strong>
   <a class="anchor" href="#strongresourcesstrong">#</a>
@@ -292,7 +331,7 @@ and by the Cyprus Research and Innovation Foundation through COMPLEMENTARY/0916/
   <a class="anchor" href="#stronglicensestrong">#</a>
 </h3>
 <p>The framework is open-sourced under the Apache 2.0 License base. The codebase of the framework is maintained by the authors for academic research and is therefore provided &ldquo;as is&rdquo;.</p>
-<p><span style="color: #40897B">** <strong>More information coming soon</strong> **</span></p>
+<p><a href="https://ucy-linc-lab.github.io/BenchPilot/docs/installation/"><strong>Start experimenting by installing Benchpilot now!</strong></span></p>
 </article>
  
       

@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  smart-plug:
+    build: ./smart-plug/
+    image: python-smart-plug:0.0.1
+    restart: always
+    environment:
+      SMART_PLUG_URL: "${plug_ip}" # plug's ip
+      CONFIG_PATH: 'config'
+      PREFIX: "smart_plug_"
+      TIMEOUT: 15
+    ports:
+      - 19998:19998
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: "${hostname}" #e.g. raspberrypi3
+    ports:
+      - 19999:19999
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - ./netdata:/etc/netdata
+      - ./netdata:/etc/netdata/go.d
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
