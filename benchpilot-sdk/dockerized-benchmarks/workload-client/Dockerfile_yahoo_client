@@ -1,0 +1,18 @@
+# Build image with arg, e.g. docker build --build-arg engine=flink --build-arg engineVersion=1.11.3 --build-arg scalaVersion=2.12 --build-arg scalaSubVersion=10 .
+# or $(for i in `cat build-args.txt`; do out+="--build-arg $i " ; done; echo $out;out="") 
+ARG engine engineVersion engineVersionImageName scalaVersion scalaSubVersion
+FROM benchpilot/benchpilot:sdpe-"$engine"-$engineVersionImageName AS engine_image
+
+FROM client:latest
+#FROM benchpilot/benchpilot:workload-cli
+ARG engine engineVersion engineVersionImageName scalaVersion scalaSubVersion scalaBinVersion kafkaVersion
+# copy engine framework
+COPY --from=engine_image /$engine /$engine
+
+# copy yahoo benchmark essentials
+COPY yahoo-streaming-workloads/yahoo-common yahoo-streaming-workloads/$engine/$engine-$engineVersionImageName ./
+
+RUN chmod +x ./stream-bench.sh && chmod +x ./marketing-workload.sh;
+
+# setup engine 
+#RUN mvn clean install -Dkafka.version="$kafkaVersion" -D$engine.version="$engineVersion"  -Dscala.binary.version="$scalaVersion" -Dscala.version="$scalaVersion.$scalaSubVersion"

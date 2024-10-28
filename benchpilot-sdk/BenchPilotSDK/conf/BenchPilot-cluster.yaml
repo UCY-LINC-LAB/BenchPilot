@@ -1,0 +1,19 @@
+cluster:
+  manager:
+      ip: "0.0.0.0" # TODO: assign the IP of the device that will run the benchpilot client
+      # in case of not using a proxy - remove the following 3 lines
+      proxies:
+        http_proxy: "http://example.proxy.com:8080/"
+        https_proxy: "https://example.proxy.com:8080/"
+  nodes: # here define the nodes that you will benchmark
+    - ip: "10.10.10.10" # example of ip
+      hostname: "raspberrypi"
+      username: "pi"
+      password: "raspberrypi"
+    - ip: "10.11.11.11" # another example using ssh key
+      hostname: "old_server"
+      username: "ubuntu"
+      ssh_key_path: "BenchPilotSDK/conf/ssh_keys/ssh_key.pem" 
+      proxies: # if your device is placed behind a proxy you should also include these
+        http_proxy: "http://example.proxy.com:8080/"
+        https_proxy: "https://example.proxy.com:8080/"

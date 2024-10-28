@@ -1,162 +1,163 @@
-import requests, time
+import os
+import BenchPilotSDK.utils.benchpilotProcessor as bp
 from abc import abstractmethod
-from sys import exit
+from time import sleep
+from datetime import datetime
+from dataclasses import dataclass
 from BenchPilotSDK.services.service import Service
-from BenchPilotSDK.orchestrators.orchestratorFactory import OrchestratorFactory
-from BenchPilotSDK.orchestrators.containerOrchestrator import ContainerOrchestrator
-from BenchPilotSDK.utils.exceptions import MissingBenchExperimentAttributeException
-from BenchPilotSDK.utils.workloadRecord import WorkloadRecord
-from BenchPilotSDK.workloads.setup.workloadSetup import WorkloadSetup
+from BenchPilotSDK.utils.loggerHandler import LoggerHandler
+from BenchPilotSDK.utils.experimentRecord import WorkloadRecord
+from BenchPilotSDK.utils.exceptions import BenchExperimentInvalidException
 
 
+@dataclass
 class Workload:
     """
     The class represents the workload abstract object
     """
     name: str
     record_name: str
-    repetition: int
-    repetition_count: int
-    duration: int
-    parameters: {}
     cluster: {}
-    services: [] = []
-    orchestrator: ContainerOrchestrator
-    path_to_dockerfile_worker: str
-    workload_record: WorkloadRecord = WorkloadRecord()
-    workload_setup: WorkloadSetup
-    restarting_services: [] = []
+    duration: str = "default"
+    shift: str = "0m"
+    parameters: {} = None
+    logger = LoggerHandler().logger
+    orchestrator: str = "swarm"
     workload_timeout: int = 0
-    # please change the url if you have added a new client with a different url
-    workload_client_url: str
-    # set the configuration that the client may have to update on its container for the workload
-    workload_client_conf: [] = []
+    started: bool = False
+    finished: bool = False
+    retrieved_logs: bool = False
+    started_time: datetime = ""
+    warm_up: str = "0m"
 
-    def __init__(self, workload_yaml):
-        if workload_yaml is None:
-            raise MissingBenchExperimentAttributeException("workload")
-        required_attributes = ["name", "record_name", "repetition", "duration", "cluster"]
-        self.workload_setup = WorkloadSetup(workload_yaml)
-        self.workload_setup.check_required_parameters('workload', required_attributes, workload_yaml)
-        self.name = workload_yaml["name"]
-        self.record_name = workload_yaml["record_name"]
-        self.repetition = workload_yaml["repetition"]
-        self.duration = workload_yaml["duration"]
-        self.parameters = workload_yaml["parameters"]
-        self.cluster = workload_yaml["cluster"]
-        required_attributes = ["manager", "nodes"]
-        self.workload_setup.check_required_parameters('cluster', required_attributes, self.cluster)
+    """
+    Abstract class for parameters. Override it depending on the workload's parameters.
+    """
+
+    @dataclass
+    class Parameters:
+        pass
+
+    def __post_init__(self):
+        self.logger = LoggerHandler().logger
         self.services = []
-        self.restarting_services = []
-        self.nodes = self.cluster["nodes"]
-        self.manager_ip = self.cluster["manager"]
-        self.workload_client_url = 'http://' + self.manager_ip + ':5000/api/v1'
-        orchestrator = self.cluster["orchestrator"] if "orchestrator" in self.cluster else None
-        self.orchestrator = OrchestratorFactory(orchestrator, self.manager_ip, self.cluster).orchestrator
-        self.workload_record = WorkloadRecord(workload_yaml)
+        self.workload_timeout = 0
+        self.started = False
+        self.finished = False
+        self.retrieved_logs = False
+        if self.parameters is None:
+            self.parameters = {}
+        # assigning cluster parameters
+        self.__assign_cluster_parameters()
+        if not "default" in self.duration:
+            self.duration = bp.convert_to_seconds(self.duration)
+            if int(self.duration) < 0:
+                raise BenchExperimentInvalidException("Non Valid Duration Time")
+        self.shift = bp.convert_to_seconds(self.shift)
+        self.warm_up = bp.convert_to_seconds(self.warm_up)
+        if int(self.shift) < 0:
+            raise BenchExperimentInvalidException("Non Valid Cold Start Time")
+        workload_conf = {'workload_name': self.name, 'duration': self.duration, 'shift': self.shift,
+                         'parameters': self.parameters, 'cluster': self.cluster, 'orchestrator': self.orchestrator.name}
+        self.record = WorkloadRecord(self.record_name, workload_conf)
         self.list_of_services_images = {'manager': [], 'worker': []}
-        self.repetition_count = 0
 
+    def __assign_cluster_parameters(self):
+        params = {"cluster": self.cluster}
+        self.orchestrator = bp.process_class_choice(class_name=self.orchestrator, class_type="orchestrator", **params)
+        self.manager_ip = os.environ["MANAGER_IP"]
+
+    # sets the workload up, and then calls the orchestrator to set up the cluster
     @abstractmethod
     def setup(self):
-        self.workload_setup.setup(self.parameters)
         self.__iterate_services(self.__assign_list_of_images, None)
+        LoggerHandler.coloredPrint("-- Initiating BenchPilot Setup Process For Workload: " + self.record_name + " --")
+        print(
+            '(This process usually consists of installing docker, docker images and setting up the needed orchestrator)')
+        print("It may take some time so please wait..")
         self.orchestrator.setup(self.list_of_services_images)
 
-    def __compose_yaml(self):
-        if "http_proxy" in self.cluster:
-            http_proxy = self.cluster["http_proxy"]
-        else:
-            http_proxy = ''
-        https_proxy = http_proxy
-        if "https_proxy" in self.cluster:
-            https_proxy = self.cluster["https_proxy"]
-        if len(http_proxy) > 0 or len(https_proxy) > 0:
-            self.__iterate_services(self.__assign_proxy, [http_proxy, https_proxy])
+    def rewind(self):
+        self.started = self.finished = self.retrieved_logs = False
 
-        if len(self.nodes) > 0:
-            self.placement_count = 0
-            self.__iterate_services(self.__assign_placement, None)
+    def add_duration(self, duration):
+        self.duration += bp.convert_to_seconds(duration)
 
-        self.orchestrator.compose_yaml(self.services)
-
+    # adds a service to its service list
     def add_service(self, service: Service):
         self.services.append(service)
 
+    # shutdowns all of its services through its orchestrator
+    def shutdown_all_services(self):
+        self.orchestrator.undeploy_workload(self.record_name)
+
+    # composes orchestrator file through the orchestrator
+    def compose_orchestrator_file(self):
+        self.__prepare_for_compose()
+        self.orchestrator.compose_orchestrator_file(self.services, self.record_name + ".yaml", self.record_name)
+
+    # deploys workload through its orchestrator, checks if the workload has started, submits it, and declares that it has start, then wait to finish.
+    def deploy(self):
+        if not self.started:
+            self.orchestrator.deploy_workload(self.record_name)
+            self.__iterate_services(self.__check_containers_have_started, None)
+            self.__iterate_services(self.__check_services_have_started, None)
+            self.submit_workload()
+            self.record.workload_started()
+            self.started_time = datetime.strptime(self.record.get_last_start_time(), WorkloadRecord.fmt)
+            self.started = True
+
+    def retrieve_logs(self):
+        self.retrieved_logs = True
+        self.record.append_logs(self.orchestrator.get_workload_service_logs(self.record_name))
+
+    # declares the workload has finished and appends to the record its service logs
+    def declare_workload_as_finished(self):
+        self.logger.debug("Declaring workload as finished " + self.record_name)
+        if not self.finished:
+            self.record.workload_finished()
+            self.finished = True
+            if not self.retrieved_logs:
+                self.retrieve_logs()
+            self.logger.info('Workload Finished')
+
+    # Abstract method of submitting workload, in this generic implementation we assume that the workload has started from the minute it has been deployed
     @abstractmethod
-    def deploy_services(self):
-        if self.repetition_count == 0:
-            self.orchestrator.deploy_services()
-        elif len(self.restarting_services) > 0:
-            for service in self.restarting_services:
-                self.orchestrator.redeploy_service(service)
+    def submit_workload(self):
+        pass
 
-    """
-    Posts request to the client to submit job after every service is app and running.
-    Please override in case of different implementation of workload.
-    """
-
-    @abstractmethod
-    def start_workload_job(self):
-        # compose yaml and setup orchestrator only if it's the first workload's trial
-        if self.repetition_count == 0:
-            self.setup()
-            self.__compose_yaml()
-        self.deploy_services()
-        self.__iterate_services(self.__check_containers_have_started, None)
-        self.__iterate_services(self.__check_services_have_started, None)
-        # todo: fill workload's parameters in json format
-        parameters = {}
-        if self.workload_timeout < 180:
-            response = requests.post(self.workload_client_url, json=parameters)
-            if response.status_code != 200:
-                print("Workload client not running")
-                exit()
-
-            # check if workload has started
-            if self.__workload_has_started() == -1:
-                self.workload_timeout += 1
-                self.start_workload_job()
-                return
-
-            self.__workload_wait_to_finish()
-            self.repetition_count += 1
+    # Sleeps or checks that the workload is running properly. When it finishes, it declares it as finished.
+    def wait_workload_to_finish(self):
+        if type(self.duration) is str and "default" in self.duration:
+            self.orchestrator.wait_workload_to_finish(workload_name=self.record_name, services=self.services,
+                                                      return_state=False)
+            self.declare_workload_as_finished()
         else:
-            print('Workload timeout')
-            exit()
+            sleep(int(self.duration))
+            self.stop_workload()
 
-    @abstractmethod
-    def __workload_has_started(self):
-        sec_waiting = 0
-        job_not_started = True
-        while job_not_started:
-            response = requests.get(self.workload_client_url)
-            if "The workload hasn't started yet" in response.text:
-                if sec_waiting < 180:
-                    # wait for 1 sec and retry
-                    print("Waiting 1 seconds to retry to check if workload has started")
-                    time.sleep(1)
-                    sec_waiting += 1
-                else:
-                    print("Workload timeout")
-                    return -1
-            else:
-                print("Workload has started")
-                return 0
+    def has_workload_finished(self):
+        if type(self.duration) is str and "default" in self.duration:
+            return self.orchestrator.wait_workload_to_finish(workload_name=self.record_name, services=self.services,
+                                                             return_state=True)
+        else:
+            now_timestamp = datetime.strptime(WorkloadRecord.get_timestamp(), WorkloadRecord.fmt)
+            current_experiment_time = int((now_timestamp - self.started_time).total_seconds())
+            if current_experiment_time >= int(self.duration):
+                self.logger.debug("Stopping Workload after: " + str(self.duration) + "s, with name: " + self.record_name)
+                self.stop_workload()
+                return True
+        return False
 
-    def __workload_wait_to_finish(self):
-        workload_is_running = True
-        self.workload_record.workload_started()
+    # Stops the workload, firstly, it un-deploys it, and then declares that it's finished.
+    def stop_workload(self):
+        self.logger.debug("Stopping workload from workload: " + self.record_name)
+        if not self.retrieved_logs:
+            self.retrieve_logs()
+        self.orchestrator.undeploy_workload(self.record_name)
+        self.declare_workload_as_finished()
 
-        while workload_is_running:
-            response = requests.get(self.workload_client_url)
-            if 'Workload still running' in response.text:
-                continue
-            else:
-                workload_is_running = False
-                print('Workload Finished')
-                self.workload_record.workload_finished()
-
+    # Generic method of iterating workload's services
     def __iterate_services(self, function_to_call, parameters):
         for workload_service in self.services:
             if hasattr(workload_service, "services"):
@@ -171,30 +172,40 @@ class Workload:
                 else:
                     function_to_call(workload_service)
 
-    def __check_containers_have_started(self, service: Service):
-        if self.orchestrator.container_wise_service_has_started(service) == -1:
-            exit()
-
-    def __check_services_have_started(self, service: Service):
-        if self.orchestrator.application_wise_service_has_started(service) == -1:
-            exit()
-
-    @staticmethod
-    def __assign_proxy(service: Service, parameters: []):
-        service.assign_proxy(parameters[0], parameters[1])
-
-    def __assign_placement(self, service: Service):
-        if service.needs_placement:
-            node = self.orchestrator.setupOrchestrator.cluster_nodes[self.nodes[self.placement_count]]
-            service.reassign_placement(self.nodes[self.placement_count])
-            if "arm" in node["architecture"]:
-                service.image_tag = service.image_arm_tag
-            self.placement_count += 1
-            if self.placement_count >= len(self.nodes):
-                self.placement_count = 0
-
+    # Creates a list of images in order for the orchestrator to pull them on the appropriate cluster devices
     def __assign_list_of_images(self, service: Service):
         placement = 'worker' if service.needs_placement else 'manager'
-        image = {'name': service.image, 'tag': service.image_tag, 'arm_tag': service.image_arm_tag}
-        if not(image in self.list_of_services_images[placement]):
-            self.list_of_services_images[placement].append(image)
+        if not (service.image in self.list_of_services_images[placement]):
+            self.list_of_services_images[placement].append(service.image)
+
+    # Checks if the services have been deployed based on the orchestrator's output
+    def __check_containers_have_started(self, service: Service):
+        self.orchestrator.container_wise_service_has_started(service=service, workload_name=self.record_name)
+
+    # Checks if the services have been deployed, application-wise, based on the orchestrator's output
+    def __check_services_have_started(self, service: Service):
+        self.orchestrator.application_wise_service_has_started(service=service, workload_name=self.record_name)
+
+    # Assigns the proxy declaration in case of having a proxy in the network.
+    def __assign_proxy(self, service: Service):
+        service.assign_proxy(self.orchestrator.get_node_proxy(service.placement))
+
+    # Assigns placement statement based on the workloads to each service and their according image.
+    def __assign_placement(self, service: Service):
+        node = "manager"
+        if service.needs_placement:
+            if self.cluster[self.placement_count] != "manager":
+                node = self.orchestrator.setupOrchestrator.cluster_nodes[self.cluster[self.placement_count]]
+                service.reassign_placement(self.cluster[self.placement_count])
+                if "arm" in node["architecture"]:
+                    service.image_tag = service.image["arm_tag"]
+            self.placement_count += 1
+            if self.placement_count >= len(self.cluster):
+                self.placement_count = 0
+        self.__assign_proxy(service)
+
+    # It's called in order to prepare for composing the orchestration file. Specifically assigns proxy and placement parameters
+    def __prepare_for_compose(self):
+        if len(self.cluster) > 0:
+            self.placement_count = 0
+            self.__iterate_services(self.__assign_placement, None)

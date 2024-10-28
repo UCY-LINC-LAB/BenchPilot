@@ -1,11 +1,10 @@
 import json
 from abc import abstractmethod
 
-from workloads.setup.workloadSetup import WorkloadSetup
-
 
 class WorkloadClient:
-    def __init__(self):
+    def __init__(self, logger):
+        self.logger = logger
         self.setup = WorkloadSetup()
         self.workload_record: [] = []
         self.running_json = json.dumps({'status': 'success', 'message': 'Job still running'}), 200, {
@@ -20,14 +19,27 @@ class WorkloadClient:
 
     @staticmethod
     @abstractmethod
-    def get_workload_collected_info(timestamp):
+    def get_workload_collected_info(name):
         pass
 
     @abstractmethod
-    def start_workload(self, starting_timestamp, request_body):
+    def start_workload(self, name, request_body):
         pass
 
     @staticmethod
     @abstractmethod
     def stop_workload():
+        pass
+
+
+class WorkloadSetup(object):
+    """
+    The workloadSetup is responsible to set up the needed configuration files of a workload
+    """
+    workload_client_path: str = "/workload-client/"
+
+    @staticmethod
+    @abstractmethod
+    def update_workload_configuration(parameters):
+        # override depending on the workload
         pass

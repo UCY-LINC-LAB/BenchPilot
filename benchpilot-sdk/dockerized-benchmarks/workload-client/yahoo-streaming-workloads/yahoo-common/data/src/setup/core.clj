@@ -143,12 +143,12 @@
                                    time_updated (redis/hget window-key "time_updated")]
                                [seen (- (Long/parseLong time_updated) (Long/parseLong window-time))]))))))))))))
 
-(defn gen-ads [redis-host number-campaigns]
+(defn gen-ads [redis-host num-of-campaigns]
   (redis/with-server {:host redis-host}
     (let [campaigns (redis/smembers "campaigns")
-          ads (into [] (make-ids (* number-campaigns 10)))
+          ads (into [] (make-ids (* num-of-campaigns 10)))
           campaigns-ads (map vector campaigns (partition 10 ads))]
-      (if (< (count campaigns) number-campaigns)
+      (if (< (count campaigns) num-of-campaigns)
         (throw (RuntimeException. "No Campaigns found. Please run with -n first.")))
       (doseq [[campaign campaign-ads] campaigns-ads]
         (doseq [ad campaign-ads]
@@ -175,9 +175,9 @@
          "\", \"event_time\": \"" (str time)
          "\", \"ip_address\": \"1.2.3.4\"}")))
 
-(defn run [throughput with-skew? kafka-hosts redis-host number-campaigns]
+(defn run [throughput with-skew? kafka-hosts redis-host num-of-campaigns]
   (println "Running, emitting" throughput "tuples per second.")
-  (let [ads (gen-ads redis-host number-campaigns)
+  (let [ads (gen-ads redis-host num-of-campaigns)
         page-ids (make-ids 100)
         user-ids (make-ids 100)
         start-time-ns (* 1000000 (System/currentTimeMillis))
@@ -197,10 +197,10 @@
           (send p (record "ad-events"
                           (.getBytes (make-kafka-event-at t with-skew? ads user-ids page-ids)))))))))
 
-(defn do-new-setup [redis-host number-campaigns]
+(defn do-new-setup [redis-host num-of-campaigns]
   ;; Hook up the redis DB
   (println "Writing campaigns data to Redis.")
-  (let [campaigns (make-ids number-campaigns)]
+  (let [campaigns (make-ids num-of-campaigns)]
     (redis/with-server {:host redis-host}
       (redis/flushall)
       (doseq [campaign campaigns]
@@ -234,8 +234,8 @@
   (let [{campaigns :campaigns ads :ads} (load-ids)]
     (if (or (nil? campaigns) (nil? ads))
       ;; Create new ids
-      (let [campaigns (make-ids (conf :number-campaigns))
-            ads (into [] (make-ids (* (conf :number-campaigns) 10)))]
+      (let [campaigns (make-ids (conf :num-of-campaigns))
+            ads (into [] (make-ids (* (conf :num-of-campaigns) 10)))]
         (write-to-redis campaigns ads (conf :redis-host))
         (write-to-kafka ads (conf :kafka-brokers) (conf :kafka-event-count))
         (write-ids campaigns ads))
@@ -245,15 +245,15 @@
   (let [conf (yaml/parse-string (slurp confPath))
         redis-host (get conf :redis.host)
         kafka-port (get conf :kafka.port)
-        number-campaigns (get conf :number.campaigns)
-        view-capacity-per-window (get conf :view.capacity.per.window)
+        num-of-campaigns (get conf :num.of.campaigns)
+        capacity-per-window (get conf :capacity.per.window)
         kafka-event-count (get conf :kafka.event.count)
-        kafka-event-count (* view-capacity-per-window kafka-event-count) ; N millions
+        kafka-event-count (* capacity-per-window kafka-event-count) ; N millions
         time-divisor (get conf :time.divisor) ; seconds
         kafka-hosts (clojure.string/join (interpose "," (for [broker (get conf :kafka.brokers)]
                                                           (str broker ":" kafka-port))))]
     (println {:redis-host redis-host :kafka-brokers kafka-hosts})
-    {:redis-host redis-host :kafka-brokers kafka-hosts :number-campaigns number-campaigns :view-capacity-per-window view-capacity-per-window :kafka-event-count kafka-event-count :time-divisor time-divisor}))
+    {:redis-host redis-host :kafka-brokers kafka-hosts :num-of-campaigns num-of-campaigns :capacity-per-window capacity-per-window :kafka-event-count kafka-event-count :time-divisor time-divisor}))
 
 (def cli-options
   [["-s" "--setup" "Set up for catchup-simulation-mode (or re-setup if the .txt files exist)"]
@@ -275,16 +275,16 @@
         conf (get-conf (:configPath options))
         kafka-hosts (get conf :kafka-brokers)
         redis-host (get conf :redis-host)
-        number-campaigns (get conf :number-campaigns)
-        view-capacity-per-window (get conf :view-capacity-per-window)
+        num-of-campaigns (get conf :num-of-campaigns)
+        capacity-per-window (get conf :capacity-per-window)
         kafka-event-count (get conf :kafka-event-count)
-        kafka-event-count (* view-capacity-per-window kafka-event-count) ; N millions
+        kafka-event-count (* capacity-per-window kafka-event-count) ; N millions
         time-divisor (get conf :time-divisor)] ; seconds
     (cond
       (and (:setup options) (:check options)) (println "Specify either --setup OR --check")
       (:setup options)                        (do-setup conf)
       (:check options)                        (check-correct redis-host time-divisor)
-      (:new options)                          (do-new-setup redis-host number-campaigns)
-      (:run options)                          (run (:throughput options) (:with-skew options) kafka-hosts redis-host number-campaigns)
+      (:new options)                          (do-new-setup redis-host num-of-campaigns)
+      (:run options)                          (run (:throughput options) (:with-skew options) kafka-hosts redis-host num-of-campaigns)
       (:get-stats options)                    (get-stats redis-host)
       :else                                   (println summary))))

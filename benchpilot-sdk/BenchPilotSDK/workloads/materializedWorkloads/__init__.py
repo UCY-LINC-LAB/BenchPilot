@@ -1,0 +1,6 @@
+from BenchPilotSDK.workloads.materializedWorkloads.sdpeWorkload import SDPEWorkload
+from BenchPilotSDK.workloads.materializedWorkloads.marketingCampaignWorkload import MarketingCampaign
+from BenchPilotSDK.workloads.materializedWorkloads.clientBasedWorkload import ClientBasedWorkload
+from BenchPilotSDK.workloads.materializedWorkloads.mlperfWorkload import Mlperf
+from BenchPilotSDK.workloads.materializedWorkloads.simpleWorkload import Simple
+from BenchPilotSDK.workloads.materializedWorkloads.databaseWorkload import Database

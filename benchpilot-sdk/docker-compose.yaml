@@ -5,13 +5,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
-      - ./benchPilotNote.ipynb:/benchPilotNote.ipynb
     ports:
       - 8888:8888
     environment:
+      # jupyter environment variables
       - "JUPYTER_ENABLE_LAB=yes"
       - "GRANT_SUDO=yes"
       - "CHOWN_HOME=yes"
+      # Prometheus environment variables
       - PROMETHEUS_IP=0.0.0.0
       - PROMETHEUS_PREFIX=${your_datacenter_prefix}
     user: root

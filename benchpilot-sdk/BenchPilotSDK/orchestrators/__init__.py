@@ -1,3 +1,2 @@
 from BenchPilotSDK.orchestrators.containerOrchestrator import ContainerOrchestrator
-from BenchPilotSDK.orchestrators.dockerSwarmOrchestrator import DockerSwarmOrchestrator
-from BenchPilotSDK.orchestrators.orchestratorFactory import OrchestratorFactory
+from BenchPilotSDK.orchestrators.setupOrchestrator import SetupOrchestrator

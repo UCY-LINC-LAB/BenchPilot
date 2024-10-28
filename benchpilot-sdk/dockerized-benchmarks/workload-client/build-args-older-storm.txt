@@ -1,0 +1,6 @@
+engine=storm
+engineVersionImageName=1.2.3
+engineVersion=1.2.3
+scalaVersion=2.11
+scalaSubVersion=10
+kafkaVersion=2.2.1

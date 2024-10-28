@@ -1,0 +1,51 @@
+idle_between_experiments: "2m"
+experiments:
+  - experiment:
+      record_name: "mlStorm_old_server" # name must be < 63 characters
+      repetition: 1
+      duration: "default"
+      workloads:
+        - name: "mlperf"
+          cluster: ["old_server"] # workers' hostnames
+          orchestrator: "swarm"
+          duration: "8m"
+          parameters:
+            dataset_folder: "imagenet2012"
+            model_file: "resnet50_v1.onnx"
+            profile: "resnet50-onnxruntime"
+            data_volume_path: "/mlperf/data"
+            model_volume_path: "/mlperf/model"
+            output_volume_path: "/mlperf/output"
+            worker_threads: 12
+        - name: "marketing-campaign"
+          cluster: ["old_server"] # workers' hostnames
+          duration: "8m"
+          parameters:
+            num_of_campaigns: 100000
+            capacity_per_window: 10000
+            kafka_event_count: 100000000
+            time_divisor: 10000
+            workload_tuples_per_second_emission: 1000000
+            engine:
+              name: "storm"
+              parameters:
+                ackers: 2
+                executors_per_node: [ 4 ]
+                ui_port: "8080"
+  - experiment:
+      record_name: "mdb_scpu_rpi"
+      repetition: 1
+      duration: "default"
+      workloads:
+        - name: "database"
+          duration: "20m"
+          cluster: [ "raspberrypi" ] # workers' hostnames
+          parameters:
+            db: "mongodb"
+            threads: 12
+        - name: "simple"
+          cluster: [ "raspberrypi" ] # workers' hostnames
+          parameters:
+            service: "stress"
+            options:
+              - "--cpu": "4"

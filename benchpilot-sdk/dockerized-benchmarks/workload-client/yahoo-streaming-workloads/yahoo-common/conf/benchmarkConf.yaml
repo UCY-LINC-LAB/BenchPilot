@@ -1,9 +1,9 @@
-number.campaigns: 100
-view.capacity.per.window: 10
+num.of.campaigns: 100
+capacity.per.window: 10
 kafka.event.count: 1000000
 time.divisor: 10000
-benchmark.tuples.per.second.emition: 1000
-benchmark.duration: 240
+workload.tuples.per.second.emission: 1000
+workload.duration: 240
 kafka.brokers: 
     - kafka
 zookeeper.servers: 
@@ -24,3 +24,5 @@ spark.executor.cores: 1
 spark.executor.memory: 1G
 spark.partitions: 10
 storm.version: 1.2.3
+process.hosts: 1
+process.cores: 4

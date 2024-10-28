@@ -1,0 +1,6 @@
+engine=flink
+engineVersionImageName=1.11.3_2.12
+engineVersion=1.11.3
+scalaVersion=2.12
+scalaSubVersion=10
+kafkaVersion=2.2.1

@@ -1,70 +1,70 @@
-import json
+import asyncio
 import os
-from venv import logger
+from meross_iot.http_api import MerossHttpClient
+from meross_iot.manager import MerossManager
+from prometheus_client import Gauge, start_http_server
 
-import requests
-from prometheus_client.metrics_core import GaugeMetricFamily
-from prometheus_client.registry import CollectorRegistry
+smart_plug_num = str(os.getenv("SMART_PLUG_NUM"))
+# Prometheus Gauge for power consumption
+power_gauge = Gauge('smart_plug_power_W', 'Power consumption of the smart plug')
 
-url = str(os.getenv("SMART_PLUG_URL"))
-config_path = str(os.getenv("CONFIG_PATH"))
-prefix = str(os.getenv("PREFIX"))
-timeout = int(os.getenv("TIMEOUT"))
-
-registry = CollectorRegistry()
-
-
-class CustomCollector(object):
-    def collect(self):
+async def fetch_power_metrics(plug):
+    while True:
         try:
-            payload = json.dumps({
-                "header": {
-                    "from": "/app/cd33257b7e1c57ab29cbe2c35f53553d95fce690a040001251c8381025e3051e/subscribe",
-                    "messageId": "de56fd2fe7b1fa30dc5d6c91b6f088e0",
-                    "method": "GET",
-                    "namespace": "Appliance.Control.Electricity",
-                    "payloadVersion": 1,
-                    "sign": "a87581dd22b84cd185702561810c0d16",
-                    "timestamp": 1641987971
-                },
-                "payload": {}
-            })
-            headers = {
-                'Content-Type': 'application/json'
-            }
-            power_response = requests.request("POST", f"http://{url}/{config_path}",
-                                              headers=headers,
-                                              data=payload).json()
-        except Exception:
-            logger.error("Exception during raspberry's data request")
-        yield self.create_power_graph(power_response)
+            # Fetch the latest consumption data
+            power = await plug.async_get_instant_metrics()
+            power_gauge.set(power.power)
+        except Exception as e:
+            print(f"Error fetching power metrics: {e}")
+        # Wait before fetching the next set of metrics
+        await asyncio.sleep(10)  # TODO: Adjust the sleep time as needed
 
-    def get_power_and_timestamp(self, power_response):
-        power = power_response.get('payload').get('electricity').get('power')
-        timestamp = power_response.get('header').get('timestamp')
-        return power, timestamp
+async def main():
+    # TODO: don't forget to set your meross email and password
+    email = os.getenv("MEROSS_EMAIL")
+    password = os.getenv("MEROSS_PASSWORD")
 
-    def create_power_graph(self, power_response):
-        power, timestamp = self.get_power_and_timestamp(power_response)
-        power /= 1000.0
-        c = GaugeMetricFamily(f'{prefix}power_W', '', labels=['chart', 'family', 'dimension'])
-        c.add_metric(value=power, labels=['smart_plug.power', 'smart_plug', 'power'],
-                     timestamp=timestamp)
-        return c
+    if not email or not password:
+        print("Email or password environment variables are missing.")
+        return
 
+    # Initialize the Meross Manager
+    # TODO: you can change the api_base_url depending on your account
+    client = await MerossHttpClient.async_from_user_password(api_base_url='https://iotx-us.meross.com', email=email, password=password)
+    manager = MerossManager(http_client=client)
+    
+    # Login to the Meross Cloud
+    await manager.async_init() 
+    
+    # Load known devices
+    await manager.async_device_discovery()
+    
+    # Retrieve the device
+    plugs = manager.find_devices(device_type="mss310") # TODO: update the device_type based on your device
+    if len(plugs) < 1:
+        print("No MSS310 plugs found...")
+        return
 
-registry.register(CustomCollector())
+    myplug = plugs[0]
+    for plug in plugs:
+        if str(plug).split(" (")[0] == f"smart-plug-{smart_plug_num}":
+            myplug = plug
 
-from flask import Flask
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from prometheus_client import make_wsgi_app
+    # Start fetching power metrics
+    await fetch_power_metrics(myplug)
 
-# Create my app
-app = Flask(__name__)
+    # Close the manager properly when done (this will actually never be called in this loop)
+    await manager.async_close()
 
-# Add prometheus wsgi middleware to route /metrics requests
-app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
-    '/api/v1/allmetrics': make_wsgi_app(registry)
-})
+if __name__ == "__main__":
+    # Start Prometheus server on port 19998, which Netdata can scrape
+    start_http_server(19998)
 
-app.run(host="0.0.0.0", port=19998)
+    # Run the asyncio loop to fetch metrics continuously
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_until_complete(main())
+    except KeyboardInterrupt:
+        pass
+    finally:
+        loop.close()

@@ -38,7 +38,7 @@ There are two things needed for this process:
 #### <strong>Register Worker nodes to Consul</strong>
 On each worker, after you have started the worker services, just enter the **Consul** folder and execute the following command:
 ````
-sh consul/register_to_consul.sh
+sh register_to_consul.sh
 ````
 *Please, don't forget to replace the IPs in the script with your IPs (Consul Ip, and worker device IP)*
 

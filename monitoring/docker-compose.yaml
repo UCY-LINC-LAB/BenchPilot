@@ -3,13 +3,13 @@ version: '3.7'
 services:
   smart-plug:
     build: ./smart-plug/
-    image: python-smart-plug:0.0.1
+    image: python-smart-plug
     restart: always
     environment:
-      SMART_PLUG_URL: "${plug_ip}" # plug's ip
-      CONFIG_PATH: 'config'
+      SMART_PLUG_NUM: "${plug_num}" # we differentiate smart plugs by numbers
       PREFIX: "smart_plug_"
-      TIMEOUT: 15
+      MEROSS_EMAIL: "${meross_email}"
+      MEROSS_PASSWORD: "${meross_password}"
     ports:
       - 19998:19998
   netdata:
@@ -32,3 +32,16 @@ services:
       - /sys:/host/sys:ro
       - /etc/os-release:/host/etc/os-release:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - 19997:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro

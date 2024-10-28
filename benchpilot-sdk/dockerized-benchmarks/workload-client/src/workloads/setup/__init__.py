@@ -1,3 +1,0 @@
-from workloads.setup.workloadSetup import WorkloadSetup
-from workloads.setup.yahooWorkloadSetup import YahooWorkloadSetup
-from workloads.setup.sdpeWorkloadSetup import SDPEWorkloadSetup

@@ -1,5 +1,6 @@
 import os
-from . import *
+from workloads.workloadClient import WorkloadClient
+from workloads.marketingCampaignWorkloadClient import MarketingCampaignWorkloadClient
 from exceptions import WorkloadMissingException
 
 class WorkloadClientFactory:
@@ -8,10 +9,10 @@ class WorkloadClientFactory:
     """
     workload: WorkloadClient
 
-    def __init__(self):
+    def __init__(self, logger):
         # set workload
         if not ("workload" in os.environ):
             raise WorkloadMissingException
         workload_env = os.environ["workload"]
-        if "yahoo" in workload_env or "marketing-campaign" in workload_env:
-            self.workload = YahooWorkloadClient()
+        if "marketing-campaign" in workload_env:
+            self.workload = MarketingCampaignWorkloadClient(logger)

@@ -17,7 +17,7 @@ All of our Docker images are uploaded on our <a href="https://hub.docker.com/r/b
 
 # <strong style="color: #40897B">BenchPilot Bootstrapping</strong>
 ## Install Docker & Docker Compose
-In the 'Getting Started' section we learned how BenchPilot is structured. In order to use the BenchPilot client you need to have installed docker & docker-compose. In our GitHub Repository, under the <em>/utils</em> folder we have prepared for you a script to automatically download it, so all you need to run is "<strong><code style="color: #40897B">sh install-docker.sh</code></strong>".
+In the 'Getting Started' section we learned how BenchPilot is structured. In order to use the BenchPilot client you need to have installed docker & docker-compose. In our GitHub Repository, under the <em>/utils</em> folder we have prepared for you a script to automatically download it, so all you need to run is "<strong><code style="color: #40897B">sh install-docker.sh</code></strong>", which is under the <i><code>monitoring</code></i> folder.
 
 ## Retrieve or Build BenchPilot Client Image
 The second step is to either retrieve or build the BenchPilot client image. 
@@ -26,7 +26,7 @@ The second step is to either retrieve or build the BenchPilot client image.
 For your ease, you can only pull the image from DockerHub just by running "<strong><code style="color: #40897B">docker pull benchpilot/benchpilot:client</code></strong>".
 
 ### Building Image Locally
-If you want to build the image locally, you firstly need to download or clone our <a href="https://github.com/UCY-LINC-LAB/BenchPilot">GitHub repository</a> and then execute the building image script by running the command "<strong><code style="color: #40897B">sh build-image.sh</code></strong>".
+If you want to build the image locally, you firstly need to download or clone our <a href="https://github.com/UCY-LINC-LAB/BenchPilot">GitHub repository</a>, go under the <code>benchpilot-sdk</code> folder, and then execute the building image script by running the command "<strong><code style="color: #40897B">sh build-image.sh</code></strong>".
 
 ## Start BenchPilot Client and start experimenting!
 The final step is to just execute the following docker-compose.yaml by running the simple command "<strong><code style="color: #40897B">docker-compose up</code></strong>". It is not needed from you to be familiarized with docker and docker-compose, but in case you want to learn more, you can always visit their <a href="https://docs.docker.com/">website</a>!
@@ -54,8 +54,6 @@ services:
       - PROMETHEUS_IP=0.0.0.0
       - PROMETHEUS_PREFIX=${your_datacenter_prefix}
     user: root
-    # command to start jupyter
-    command: ["jupyter", "notebook", "--ip='0.0.0.0'", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
 ````
 
 After starting the BenchPilot client, you can access jupyter through your browser from this link: "<strong><code style="color: #40897B">http://your_device_ip:8888</code></strong>", and start experimenting!

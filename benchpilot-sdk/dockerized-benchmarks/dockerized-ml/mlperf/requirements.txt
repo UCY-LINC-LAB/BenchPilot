@@ -1,0 +1,9 @@
+opencv-python==4.5.5.64
+future
+pillow
+ncnn==1.0.20211208
+onnxruntime==1.10.0
+onnx==1.10.0
+Cython
+pycocotools
+flask

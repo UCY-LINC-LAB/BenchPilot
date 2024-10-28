@@ -3,4 +3,4 @@
 
 set -e
 
-docker build -t python-smart-plug:0.0.1 .
+docker build -t python-smart-plug .

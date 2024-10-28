@@ -1,0 +1,25 @@
+version: "3.0"
+services:
+  worker:
+    image: benchpilot/benchpilot:mlperf-cpu-tf-amd #mlperf:cpu #benchpilot/benchpilot:mlperf-cpu
+    command: "sleep infinity" 
+    #command: '/bin/bash -c "source activate tf && /benchmark/entrypoint.sh"'
+    environment:
+      # working
+      #opts: "--mlperf_conf ./mlperf.conf --profile resnet50-onnxruntime --model /mlperf/model/resnet50_v1.onnx --dataset-path /mlperf/data/imagenet2012 --output /mlperf/output/ --threads 8 --time 240 --accuracy"
+      
+      # working
+      #opts: "--mlperf_conf ./mlperf.conf --profile resnet50-ncnn --model /mlperf/model/resnet50_v1 --dataset-path /mlperf/data/imagenet2012 --output /mlperf/output/ --threads 8 --time 60" #--accuracy"
+      
+      # working 
+      #opts: "--mlperf_conf ./mlperf.conf --profile resnet50-tf --model /mlperf/model/resnet50_v1.pb --dataset-path /mlperf/data/imagenet2012 --output /mlperf/output/ --threads 8 --time 60"
+      
+      # Not working (resnet50_INT8bit_quantized.pt)
+      # --backend pytorch-native
+      opts: "--mlperf_conf ./mlperf.conf --profile resnet50-pytorch --model /mlperf/model/resnet50_INT8bit_quantized.pt --backend pytorch-native --dataset-path /mlperf/data/imagenet2012 --output /mlperf/output/ --threads 8 --time 60"
+      #opts: "--mlperf_conf ./mlperf.conf --profile resnet50-pytorch --model /mlperf/model/resnet50-19c8e357.pth --backend pytorch-native --dataset-path /mlperf/data/imagenet2012 --output /mlperf/output/ --threads 8 --time 60"
+    volumes:
+      - /mlperf/data:/mlperf/data 
+      - /mlperf/model:/mlperf/model
+      - /proc:/host_proc
+      - ./python:/benchmark/python

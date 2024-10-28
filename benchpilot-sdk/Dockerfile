@@ -1,19 +1,13 @@
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
+
+# Copy benchpilot files
+COPY BenchPilotSDK /BenchPilotSDK
 # install required libraries
-RUN apt-get -y update
-RUN apt-get install -y bash vim build-essential
-RUN apt-get install -y curl wget
-RUN apt-get install -y git ca-certificates
-RUN rm -rf /var/lib/apt/lists
+RUN apt-get -y update && apt-get install -y bash vim build-essential curl wget git ca-certificates python3 python3-pip && \
+    pip3 install -r /BenchPilotSDK/conf/benchPilotExtraConf/requirements.txt && pip3 install notebook && \
+    export TINI_VERSION=v0.19.0; \
+    wget https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini; \
+    chmod +x /tini;
 
-# install python 
-RUN apt-get -y update
-RUN apt-get -y install python3 python3-pip
-RUN python3 --version
-
-COPY ./BenchPilotSDK /BenchPilotSDK
-COPY ./dockerized-benchmarks /dockerized-benchmarks
-COPY benchPilotNote.ipynb /benchPilotNote.ipynb
-RUN pip3 install -r /BenchPilotSDK/conf/requirements.txt
-RUN pip3 install notebook
+ENTRYPOINT ["/tini", "--", "jupyter", "notebook", "--ip='0.0.0.0'", "--port=8888", "--no-browser", "--allow-root"]

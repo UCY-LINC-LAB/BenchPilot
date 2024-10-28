@@ -1,0 +1,37 @@
+FROM continuumio/miniconda3:4.10.3p0
+
+ENV CMAKE_ARGS="-DONNX_USE_PROTOBUF_SHARED_LIBS=ON" DATA_DIR=/mlperf/data MODEL_DIR=/mlperf/model 
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    build-essential \
+    software-properties-common \
+    ca-certificates \
+    wget \
+    curl \
+    libopenblas-dev \
+    libblas-dev \
+    m4 \
+    cmake \
+    python3-pip \
+    python3-yaml \
+    python3-setuptools \
+    libavutil-dev \
+    libavcodec-dev \
+    libavformat-dev \
+    libswscale-dev \
+    libhdf5-dev \
+    protobuf-compiler \
+    ffmpeg libsm6 libxext6 \
+    tini; \
+    python3 -m pip install --upgrade pip;
+
+COPY . /benchmark
+WORKDIR /benchmark
+
+# Install PyTorch and create Conda environment for TensorFlow
+RUN cd /benchmark/inference/loadgen && \
+    conda create -y -n tf tensorflow=2 python=3.6 && \
+    echo "conda activate tf" >> ~/.bashrc && \
+    conda install -n tf pytorch-cpu torchvision-cpu -c pytorch && \ 
+    /bin/bash -c "source activate tf && pip install --upgrade pip setuptools wheel && pip install -r /benchmark/requirements.txt && pip install numpy pybind11 && CFLAGS='-std=c++14' python3 setup.py install"
