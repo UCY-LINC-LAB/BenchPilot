@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head><script src="/BenchPilot/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=BenchPilot/livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="
+  Post-Experiment Analysis
+  #
+
+After running all of our experiments, it&rsquo;s time to view our results!
+
+  Jupyter
+  #
+
+For your ease of accessing and processing the results, we used Jupyter Notebook.
+
+  Prometheus Client
+  #
+
+We have created under /BenchpilotSDK/controllers package a postExperimentController class. You can export the collected utilization metrics from the prometheus using the following code:
+from BenchPilotSDK.controllers.postExperimentController import PostExperimentController
+
+postExpController = PostExperimentController()
+
+exp_name = &#34;Your given record_name of your experiment&#34;
+metadata_json_file = &#34;/BenchPilotSDK/experiments/&#34; &#43; exp_name &#43; &#34;.json&#34;
+exp_file = &#34;/BenchPilotSDK/conf/&#34; &#43; exp_name &#43; &#34;.yaml&#34;
+
+postExpController.load_benchmark_meta(metadata_json_file)
+experiments = postExpController.get_available_workloads_from_metadata()
+exported_benchmarks = []
+for experiment in experiments:
+    exported_benchmarks.append({experiment: postExpController.get_benchmark_metrics(experiment, export_results_to_csv=True)})
+Please remember to use the methods &ldquo;assign_prometheus_prefix&rdquo; and &ldquo;assign_prometheus_suffix&rdquo; in order to assign your prometheus&rsquo; prefixes and suffixes.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/BenchPilot/docs/experiment-analysis/">
+  <meta property="og:site_name" content="BenchPilot">
+  <meta property="og:title" content="Post-Experiment Analysis">
+  <meta property="og:description" content="Post-Experiment Analysis # After running all of our experiments, it’s time to view our results!
+Jupyter # For your ease of accessing and processing the results, we used Jupyter Notebook.
+Prometheus Client # We have created under /BenchpilotSDK/controllers package a postExperimentController class. You can export the collected utilization metrics from the prometheus using the following code:
+from BenchPilotSDK.controllers.postExperimentController import PostExperimentController postExpController = PostExperimentController() exp_name = &#34;Your given record_name of your experiment&#34; metadata_json_file = &#34;/BenchPilotSDK/experiments/&#34; &#43; exp_name &#43; &#34;.json&#34; exp_file = &#34;/BenchPilotSDK/conf/&#34; &#43; exp_name &#43; &#34;.yaml&#34; postExpController.load_benchmark_meta(metadata_json_file) experiments = postExpController.get_available_workloads_from_metadata() exported_benchmarks = [] for experiment in experiments: exported_benchmarks.append({experiment: postExpController.get_benchmark_metrics(experiment, export_results_to_csv=True)}) Please remember to use the methods “assign_prometheus_prefix” and “assign_prometheus_suffix” in order to assign your prometheus’ prefixes and suffixes.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+<title>Post-Experiment Analysis | BenchPilot</title>
+<link rel="manifest" href="/BenchPilot/manifest.json">
+<link rel="icon" href="/BenchPilot/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/BenchPilot/book.min.fb69d0e92fcd17fb4042199e803e6bfa0ec2c53ccb74bf57e949532662854dff.css" integrity="sha256-&#43;2nQ6S/NF/tAQhmegD5r&#43;g7CxTzLdL9X6UlTJmKFTf8=" crossorigin="anonymous">
+  <script defer src="/BenchPilot/flexsearch.min.js"></script>
+  <script defer src="/BenchPilot/en.search.min.8136477acc5c78a0da5e61b4619c3ed9184b243181a0f84a6d37c9fe3934bfb8.js" integrity="sha256-gTZHesxceKDaXmG0YZw&#43;2RhLJDGBoPhKbTfJ/jk0v7g=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/BenchPilot/"><img src="/BenchPilot/images/plane.png" alt="Logo" /><span>BenchPilot</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/getting-started/" class="">Getting Started</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/installation/" class="">Installation</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiments/" class="">Experiments</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/workloads/" class="">Workloads</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/monitoring/" class="">Monitoring</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiment-analysis/" class="active">Post-Experiment Analysis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/exteding-framework/" class="">Exteding BenchPilot</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="http://linc.ucy.ac.cy" target="_blank" rel="noopener">
+        About Us
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/BenchPilot/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Post-Experiment Analysis</strong>
+
+  <label for="toc-control">
+    
+    <img src="/BenchPilot/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#jupyter">Jupyter</a></li>
+    <li><a href="#prometheus-client">Prometheus Client</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="strong-stylecolor-40897bpost-experiment-analysisstrong">
+  <strong style="color: #40897B">Post-Experiment Analysis</strong>
+  <a class="anchor" href="#strong-stylecolor-40897bpost-experiment-analysisstrong">#</a>
+</h1>
+<p>After running all of our experiments, it&rsquo;s time to view our results!</p>
+<h2 id="jupyter">
+  Jupyter
+  <a class="anchor" href="#jupyter">#</a>
+</h2>
+<p>For your ease of accessing and processing the results, we used Jupyter Notebook.</p>
+<h2 id="prometheus-client">
+  Prometheus Client
+  <a class="anchor" href="#prometheus-client">#</a>
+</h2>
+<p>We have created under /BenchpilotSDK/controllers package a postExperimentController class. You can export the collected utilization metrics from the prometheus using the following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> BenchPilotSDK.controllers.postExperimentController <span style="color:#f92672">import</span> PostExperimentController
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>postExpController <span style="color:#f92672">=</span> PostExperimentController()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>exp_name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Your given record_name of your experiment&#34;</span>
+</span></span><span style="display:flex;"><span>metadata_json_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/BenchPilotSDK/experiments/&#34;</span> <span style="color:#f92672">+</span> exp_name <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;.json&#34;</span>
+</span></span><span style="display:flex;"><span>exp_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/BenchPilotSDK/conf/&#34;</span> <span style="color:#f92672">+</span> exp_name <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;.yaml&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>postExpController<span style="color:#f92672">.</span>load_benchmark_meta(metadata_json_file)
+</span></span><span style="display:flex;"><span>experiments <span style="color:#f92672">=</span> postExpController<span style="color:#f92672">.</span>get_available_workloads_from_metadata()
+</span></span><span style="display:flex;"><span>exported_benchmarks <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> experiment <span style="color:#f92672">in</span> experiments:
+</span></span><span style="display:flex;"><span>    exported_benchmarks<span style="color:#f92672">.</span>append({experiment: postExpController<span style="color:#f92672">.</span>get_benchmark_metrics(experiment, export_results_to_csv<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)})
+</span></span></code></pre></div><p><em>Please remember to use the methods &ldquo;assign_prometheus_prefix&rdquo; and &ldquo;assign_prometheus_suffix&rdquo; in order to assign your prometheus&rsquo; prefixes and suffixes.</em></p>
+<p>For more information about Jupyter, please visit their <a href="https://jupyter.org/">website</a>.</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#jupyter">Jupyter</a></li>
+    <li><a href="#prometheus-client">Prometheus Client</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
