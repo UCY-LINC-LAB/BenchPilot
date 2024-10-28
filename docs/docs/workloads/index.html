@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head><script src="/BenchPilot/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=BenchPilot/livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="
+  Workloads
+  #
+
+As for now BenchPilot only supports the following containerized workloads:
+
+  
+      
+          Name
+          Description
+          Specific Configuration Parameters
+      
+  
+  
+      
+          marketing-campaign
+          A streaming distributed workload that features an application as a data processing pipeline with multiple and diverse steps that emulate insight extraction from marketing campaigns. The workload utilizes technologies such as Kafka and Redis.
+          campaigns, which is the number of campaigns, the default number is 1000.tuples_per_second, the number of emitted tuples per second, the default is 10000. kafka_event_count, the number of generated and published events on kafka, the default is 1000000. maximize_data, this attribute is used to automatically maximize the data that are critically affecting the workload&rsquo;s performance, the input that the user can put is in the format of x10, x100, etc.
+      
+      
+          mlperf
+          An inference workload, that includes tasks such as image classification and object recognition.
+          dataset_folder, which is the dataset folder, the one we have been using for our experiments is the imagenet2012, model_file, the model file that the mlperf will use for inferencing the images, for e.g. resnet50_v1.pbprofile, the mlperf&rsquo;s profile, e.g. resnet50-tf data_volume_path, the path that will be used to volume the data from, this is done as to not avoid creating huge workload images, and due to having easier configuration
+      
+      
+          db
+          A nosql database workload that keeps executing CRUD operations (Create, Read, Update and Delete).
+          db, the database that will be used as the underlying once, for now, only mongodb is supported.threads, the number of threads to be used for executing the operations. The default number of threads is 1.record_count, the number of records that will be loaded as a starting dataset into the database. The default number is 2500000. operation_count, the number of operations that will be executed during the workload - this can affect the time that the experiment will need to finish. The default number is 2500000. read_proportion, this is a float number, that represents that percentage of read operations to be executed during the benchmark, the default is 0.5  update_proportion, this is a float number, that represents that percentage of update operations to be executed during the benchmark, the default is 0.5  scan_proportion, the percentage of read operations to be executed during the experiment. The default is 0. insert_proportion, the proportion of insert operations to be executed. The default is 0. request_distribution, the distribution of the pattern of data access. The default is zipfian.
+      
+      
+          simple
+          This workload represents simple stressors that target a specific resource to stress. Underneath uses the linux command stress or IPerf3.
+          service, which can be either iperf3 or stress options, here you need to define the options as you would insert them while using the iperf3 or stress command. For e.g. for iperf3, the options should be &ldquo;-c&rdquo; to set the client&rsquo;s ip, or &ldquo;-s&rdquo; for the server ip, and &ldquo;-p&rdquo; for setting the targeted port. In case, of selecting stress, the options could be for example &ldquo;&ndash;vm&rdquo;: &ldquo;12&rdquo;, and &ldquo;&ndash;vm-bytes&rdquo;: &ldquo;1024M&rdquo;.
+      
+  
+
+It&rsquo;s important to note that BenchPilot can be easily extended to add new workloads.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/BenchPilot/docs/workloads/">
+  <meta property="og:site_name" content="BenchPilot">
+  <meta property="og:title" content="Workloads">
+  <meta property="og:description" content="Workloads # As for now BenchPilot only supports the following containerized workloads:
+Name Description Specific Configuration Parameters marketing-campaign A streaming distributed workload that features an application as a data processing pipeline with multiple and diverse steps that emulate insight extraction from marketing campaigns. The workload utilizes technologies such as Kafka and Redis. campaigns, which is the number of campaigns, the default number is 1000.tuples_per_second, the number of emitted tuples per second, the default is 10000. kafka_event_count, the number of generated and published events on kafka, the default is 1000000. maximize_data, this attribute is used to automatically maximize the data that are critically affecting the workload’s performance, the input that the user can put is in the format of x10, x100, etc. mlperf An inference workload, that includes tasks such as image classification and object recognition. dataset_folder, which is the dataset folder, the one we have been using for our experiments is the imagenet2012, model_file, the model file that the mlperf will use for inferencing the images, for e.g. resnet50_v1.pbprofile, the mlperf’s profile, e.g. resnet50-tf data_volume_path, the path that will be used to volume the data from, this is done as to not avoid creating huge workload images, and due to having easier configuration db A nosql database workload that keeps executing CRUD operations (Create, Read, Update and Delete). db, the database that will be used as the underlying once, for now, only mongodb is supported.threads, the number of threads to be used for executing the operations. The default number of threads is 1.record_count, the number of records that will be loaded as a starting dataset into the database. The default number is 2500000. operation_count, the number of operations that will be executed during the workload - this can affect the time that the experiment will need to finish. The default number is 2500000. read_proportion, this is a float number, that represents that percentage of read operations to be executed during the benchmark, the default is 0.5 update_proportion, this is a float number, that represents that percentage of update operations to be executed during the benchmark, the default is 0.5 scan_proportion, the percentage of read operations to be executed during the experiment. The default is 0. insert_proportion, the proportion of insert operations to be executed. The default is 0. request_distribution, the distribution of the pattern of data access. The default is zipfian. simple This workload represents simple stressors that target a specific resource to stress. Underneath uses the linux command stress or IPerf3. service, which can be either iperf3 or stress options, here you need to define the options as you would insert them while using the iperf3 or stress command. For e.g. for iperf3, the options should be “-c” to set the client’s ip, or “-s” for the server ip, and “-p” for setting the targeted port. In case, of selecting stress, the options could be for example “–vm”: “12”, and “–vm-bytes”: “1024M”. It’s important to note that BenchPilot can be easily extended to add new workloads.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+<title>Workloads | BenchPilot</title>
+<link rel="manifest" href="/BenchPilot/manifest.json">
+<link rel="icon" href="/BenchPilot/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/BenchPilot/book.min.fb69d0e92fcd17fb4042199e803e6bfa0ec2c53ccb74bf57e949532662854dff.css" integrity="sha256-&#43;2nQ6S/NF/tAQhmegD5r&#43;g7CxTzLdL9X6UlTJmKFTf8=" crossorigin="anonymous">
+  <script defer src="/BenchPilot/flexsearch.min.js"></script>
+  <script defer src="/BenchPilot/en.search.min.8136477acc5c78a0da5e61b4619c3ed9184b243181a0f84a6d37c9fe3934bfb8.js" integrity="sha256-gTZHesxceKDaXmG0YZw&#43;2RhLJDGBoPhKbTfJ/jk0v7g=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/BenchPilot/"><img src="/BenchPilot/images/plane.png" alt="Logo" /><span>BenchPilot</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/getting-started/" class="">Getting Started</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/installation/" class="">Installation</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiments/" class="">Experiments</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/workloads/" class="active">Workloads</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/monitoring/" class="">Monitoring</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/experiment-analysis/" class="">Post-Experiment Analysis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/BenchPilot/docs/exteding-framework/" class="">Exteding BenchPilot</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="http://linc.ucy.ac.cy" target="_blank" rel="noopener">
+        About Us
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/BenchPilot/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Workloads</strong>
+
+  <label for="toc-control">
+    
+    <img src="/BenchPilot/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#strongdetailed-workload-informationstrong"><strong>Detailed Workload Information</strong></a>
+      <ul>
+        <li><a href="#strong-idysbstreaming-analytic-workload--marketing-campaignstrong"><strong id="ysb">Streaming Analytic Workload / Marketing-Campaign</strong></a></li>
+        <li><a href="#strong-idmlperfmachine-learning-inference-workload--mlperfstrong"><strong id="mlperf">Machine Learning Inference Workload / MLPerf</strong></a></li>
+        <li><a href="#strong-idycsbnosql-database-workloadstrong"><strong id="ycsb">NoSQL Database Workload</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="strong-stylecolor-40897bworkloadsstrong">
+  <strong style="color: #40897B">Workloads</strong>
+  <a class="anchor" href="#strong-stylecolor-40897bworkloadsstrong">#</a>
+</h1>
+<p>As for now BenchPilot only supports the following containerized workloads:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Specific Configuration Parameters</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><span style="color: #40897B"><a href="#ysb">marketing-campaign</a></span></td>
+          <td>A streaming distributed workload that features an application as a data processing pipeline with multiple and diverse steps that emulate insight extraction from marketing campaigns. The workload utilizes technologies such as <a href="https://kafka.apache.org/">Kafka</a> and <a href="https://redis.io/">Redis</a>.</td>
+          <td><ul><li><i>campaigns</i>, which is the number of campaigns, the default number is 1000.</li><li><i>tuples_per_second</i>, the number of emitted tuples per second, the default is 10000.</li> <li><i>kafka_event_count</i>, the number of generated and published events on kafka, the default is 1000000.</li> <li><i>maximize_data</i>, this attribute is used to automatically maximize the data that are critically affecting the workload&rsquo;s performance, the input that the user can put is in the format of x10, x100, etc.</li></ul></td>
+      </tr>
+      <tr>
+          <td><span style="color: #40897B"><a href="#mlperf">mlperf</a></span></td>
+          <td>An inference workload, that includes tasks such as image classification and object recognition.</td>
+          <td><ul><li><i>dataset_folder</i>, which is the dataset folder, the one we have been using for our experiments is the imagenet2012,</li> <li><i>model_file</i>, the model file that the mlperf will use for inferencing the images, for e.g. resnet50_v1.pb</li><li><i>profile</i>, the mlperf&rsquo;s profile, e.g. resnet50-tf</li> <li><i>data_volume_path</i>, the path that will be used to volume the data from, this is done as to not avoid creating huge workload images, and due to having easier configuration</li></ul></td>
+      </tr>
+      <tr>
+          <td><span style="color: #40897B"><a href="#ycsb">db</a></span></td>
+          <td>A nosql database workload that keeps executing CRUD operations (Create, Read, Update and Delete).</td>
+          <td><ul><li><i>db</i>, the database that will be used as the underlying once, for now, only mongodb is supported.</li><li><i>threads</i>, the number of threads to be used for executing the operations. The default number of threads is 1.</li><li><i>record_count</i>, the number of records that will be loaded as a starting dataset into the database. The default number is 2500000.</li> <li><i>operation_count</i>, the number of operations that will be executed during the workload - this can affect the time that the experiment will need to finish. The default number is 2500000.</li> <li><i>read_proportion</i>, this is a float number, that represents that percentage of read operations to be executed during the benchmark, the default is 0.5</li>  <li><i>update_proportion</i>, this is a float number, that represents that percentage of update operations to be executed during the benchmark, the default is 0.5</li>  <li><i>scan_proportion</i>, the percentage of read operations to be executed during the experiment. The default is 0.</li> <li><i>insert_proportion</i>, the proportion of insert operations to be executed. The default is 0.</li> <li><i>request_distribution</i>, the distribution of the pattern of data access. The default is zipfian.</li></ul></td>
+      </tr>
+      <tr>
+          <td><span style="color: #40897B">simple</span></td>
+          <td>This workload represents simple stressors that target a specific resource to stress. Underneath uses the linux command <a href="https://linux.die.net/man/1/stress">stress</a> or <a href="https://man.archlinux.org/man/iperf3.1.en">IPerf3</a>.</td>
+          <td><ul><li><i>service</i>, which can be either iperf3 or stress </li><li><i>options</i>, here you need to define the options as you would insert them while using the iperf3 or stress command. For e.g. for iperf3, the options should be &ldquo;-c&rdquo; to set the client&rsquo;s ip, or &ldquo;-s&rdquo; for the server ip, and &ldquo;-p&rdquo; for setting the targeted port. In case, of selecting stress, the options could be for example &ldquo;&ndash;vm&rdquo;: &ldquo;12&rdquo;, and &ldquo;&ndash;vm-bytes&rdquo;: &ldquo;1024M&rdquo;.</li></ul></td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>It&rsquo;s important to note that BenchPilot can be easily extended to add new workloads.</strong></p>
+<p>For extending BenchPilot check this <a href="https://ucy-linc-lab.github.io/BenchPilot/docs/getting-framework/">section</a> out.</p>
+<h2 id="strongdetailed-workload-informationstrong">
+  <strong>Detailed Workload Information</strong>
+  <a class="anchor" href="#strongdetailed-workload-informationstrong">#</a>
+</h2>
+<h3 id="strong-idysbstreaming-analytic-workload--marketing-campaignstrong">
+  <strong id="ysb">Streaming Analytic Workload / Marketing-Campaign</strong>
+  <a class="anchor" href="#strong-idysbstreaming-analytic-workload--marketing-campaignstrong">#</a>
+</h3>
+<p>For this workload, we have employed the widely known <a href="https://github.com/yahoo/streaming-benchmarks">Yahoo Streaming Benchmark</a>, which is designed to simulate a data processing pipeline for extracting insights from marketing campaigns. the pipeline executed on the edge device includes steps such as receiving advertising traffic data, filtering the data, removing any unnecessary values, combining the data with existing information from a key-value store, and storing the final results. All data produced by a data generator is pushed and extracted through a message queue (<a href="https://kafka.apache.org/">Apache Kafka</a>), while intermediate data and final results are stored in an in-memory database (<a href="https://redis.io/">Redis</a>).
+This workload can be executed using any of the following distributed streaming processing engines: <a href="https://storm.apache.org/">Apache Storm</a>, <a href="https://flink.apache.org/">Flink</a>, <a href="https://spark.apache.org/">Spark</a>.</p>
+<h4 id="strongcollected-performance-metricsstrong">
+  <strong>Collected Performance Metrics</strong>
+  <a class="anchor" href="#strongcollected-performance-metricsstrong">#</a>
+</h4>
+<p>For evaluating <strong>the performance of this application</strong>, we extract the following measurements from the benchmarking log files:</p>
+<table>
+  <tr align="center" style="border-bottom: 0.5px solid grey">
+    <th style="border-right: 1px solid white; border-bottom: 0.5px solid white">Metric</th>
+    <th style="border-bottom: 0.5px solid white">Description</th>
+  <tr>
+    <td><strong># of Tuples</strong></td>
+    <td>The total number of tuples processed during execution</td>
+  </tr>
+  <tr>
+    <td><strong>Latency</strong></td>
+    <td>The total application latency, measured in ms, based on the statistics provided by the selected underlying processing engine for each deployed task</td>
+  </tr>
+</table>
+<h4 id="strongdistributed-processing-engine-parametersstrong">
+  <strong>Distributed Processing Engine Parameters</strong>
+  <a class="anchor" href="#strongdistributed-processing-engine-parametersstrong">#</a>
+</h4>
+<p>As mentioned, this workload can be executed using any of the following streaming distributed processing engines: Apache Storm, Flink or Spark.</p>
+<p>For each of those engine, the user can alter/define the following attributes:</p>
+<table style="overflow: visible" >
+  <tr align="center" style="border-bottom: 0.5px solid grey">
+    <th style="border-right: 1px solid white; border-bottom: 0.5px solid white">Engine</th>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Storm</strong></td>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Flink</strong></td>
+    <td style="border-bottom: 0.5px solid white; color: #40897B"><strong>Spark</strong></td>
+  </tr>
+  <tr>
+    <th style="border-right: 1px solid white; border-bottom: none">Parameters</th>
+    <td><ol><li>partitions</li><li>ackers</li></ol></td>
+    <td><ol><li>partitions</li><li>buffer_timeout</li><li>checkpoint_interval</li></ol></td>
+    <td><ol><li>partitions</li><li>batchtime</li><li>executor_cores</li><li>executor_memory</li></ol></td>
+  </tr>
+</table>
+<h3 id="strong-idmlperfmachine-learning-inference-workload--mlperfstrong">
+  <strong id="mlperf">Machine Learning Inference Workload / MLPerf</strong>
+  <a class="anchor" href="#strong-idmlperfmachine-learning-inference-workload--mlperfstrong">#</a>
+</h3>
+<p>We use <a href="https://github.com/mlcommons/inference">MLPerf</a>, a benchmark for machine learning training and inference, to assess the performance of our inference system. Currently, our focus is on two MLPerf tasks:</p>
+<ul>
+<li><strong>Image Classification:</strong> This task uses the ImageNet 2012 dataset (resized to 224x224) and measures Top-1 accuracy. MLPerf provides two model options: ResNet-50 v1.5, which excels in image classification, and RetinaNet, which is effective in object detection and bounding box prediction.</li>
+<li><strong>Object Detection:</strong> This task identifies and classifies objects within images, locating them with bounding boxes. MLPerf uses two model configurations: a smaller, 300x300 model for low-resolution tasks (e.g., mobile devices) and a larger, high-resolution model (1.44 MP). Performance is measured by mean average precision (mAP). The SSD model with a ResNet-34 backbone is the default for this task.</li>
+</ul>
+<p>Additionally, we have extended MLPerf by adding network-serving capabilities to measure the impact of network overhead on inference. Our setup includes:</p>
+<ul>
+<li>A lightweight server that loads models and provides a RESTful API.</li>
+<li>A workload generator that streams images to the server one-by-one (“streaming mode”), contrasting with MLPerf&rsquo;s standard local loading (“default mode”).</li>
+</ul>
+<p>For this workload, it is possible to flexibly and easily configure the dataset, latency, batch size, workload duration, thread count, and inference framework (ONNX, NCNN, TensorFlow, or PyTorch).</p>
+<h4 id="strongcollected-performance-metricsstrong-1">
+  <strong>Collected Performance Metrics</strong>
+  <a class="anchor" href="#strongcollected-performance-metricsstrong-1">#</a>
+</h4>
+<p>For evaluating <strong>the performance of this application</strong>, we extract the following measurements from the benchmarking log files:</p>
+<table>
+  <tr align="center" style="border-bottom: 0.5px solid grey">
+    <th style="border-right: 1px solid white; border-bottom: 0.5px solid white">Metric</th>
+    <th style="border-bottom: 0.5px solid white">Description</th>
+  <tr>
+    <td><strong>Accuracy %</strong></td>
+    <td>The model's accuracy that was measured during the benchmarking period</td>
+  </tr>
+  <tr>
+    <td><strong>Average and/or Total Queries per Second</strong></td>
+    <td>The # of queries that were executing during the experiment - each query represents the processing a batch of images</td>
+  </tr>
+  <tr>
+    <td><strong>Mean Latency</strong></td>
+    <td>The application's mean latency, measured in ms</td>
+  </tr>
+</table>
+<h3 id="strong-idycsbnosql-database-workloadstrong">
+  <strong id="ycsb">NoSQL Database Workload</strong>
+  <a class="anchor" href="#strong-idycsbnosql-database-workloadstrong">#</a>
+</h3>
+<p>Through the <a href="https://github.com/brianfrankcooper/YCSB">Yahoo! Cloud Serving Benchmark (YCSB)</a> workload, one can evaluate NoSQL databases like MongoDB, Redis, Cassandra, and Elasticsearch under heavy load. YCSB tests basic operations—read, update, and insert—on each database using defined operation rates across an experiment’s duration.
+Currently, BenchPilot only supports MongoDB as the underlying database. However, it can be easily adapted to the rest of the databases by containerizing them.</p>
+<p>Additionally, YCSB supports three workload distributions:</p>
+<ul>
+<li><strong>Zipfian:</strong> Prioritizes frequently accessed items.</li>
+<li><strong>Latest:</strong> Similar to Zipfian but focuses on recently inserted records.</li>
+<li><strong>Uniform:</strong> Accesses items randomly.</li>
+</ul>
+<p>For this benchmark, users can adjust various parameters, including the number of records, total operations, load distribution, operation rate, and experiment duration. It also supports multiple threads for increased database load through asynchronous operations.</p>
+<h4 id="strongcollected-performance-metricsstrong-2">
+  <strong>Collected Performance Metrics</strong>
+  <a class="anchor" href="#strongcollected-performance-metricsstrong-2">#</a>
+</h4>
+<p>For evaluating <strong>the performance of this application</strong>, we can extract the following measurements from the log files:</p>
+<table>
+  <tr align="center" style="border-bottom: 0.5px solid grey">
+    <th style="border-right: 1px solid white; border-bottom: 0.5px solid white">Metric</th>
+    <th style="border-bottom: 0.5px solid white">Description</th>
+  <tr>
+    <td><strong>Count</strong></td>
+    <td>Total number of operations per second for each minute of the experiment</td>
+  </tr>
+  <tr>
+    <td><strong>Min</strong></td>
+    <td>Min number of operations per second for each minute of the experiment</td>
+  </tr>
+  <tr>
+    <td><strong>Max</strong></td>
+    <td>Max number of operations per second for each minute of the experiment</td>
+  </tr>
+    <tr>
+    <td><strong>Average</strong></td>
+    <td>Average number of operations per second for each minute of the experiment</td>
+  </tr>
+</table></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#strongdetailed-workload-informationstrong"><strong>Detailed Workload Information</strong></a>
+      <ul>
+        <li><a href="#strong-idysbstreaming-analytic-workload--marketing-campaignstrong"><strong id="ysb">Streaming Analytic Workload / Marketing-Campaign</strong></a></li>
+        <li><a href="#strong-idmlperfmachine-learning-inference-workload--mlperfstrong"><strong id="mlperf">Machine Learning Inference Workload / MLPerf</strong></a></li>
+        <li><a href="#strong-idycsbnosql-database-workloadstrong"><strong id="ycsb">NoSQL Database Workload</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
