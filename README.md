@@ -1,5 +1,5 @@
-# <strong style="color: #40897B">BenchPilot</strong>
-BenchPilot: Repeatable & Reproducible Benchmarking for Edge Micro-DCs
+# <strong style="color: #40897B">BenchPilot V2.0</strong>
+BenchPilot v2.0: Automating Multi-Tenancy Performance Evaluation on Edge Compute Nodes
 
 BenchPilot is a modular and highly customizable benchmarking framework for edge micro-DCs. 
 BenchPilot provides a high-level declarative model for describing experiment testbeds and scenarios that automates the benchmarking process using various workloads. The latter enables users to focus on performance analysis instead of dealing with the complex and time-consuming setup. BenchPilot instantiates the underlying cluster, performs repeatable experimentation, and provides a unified monitoring stack in heterogeneous Micro-DCs. 
@@ -39,10 +39,33 @@ As for now BenchPilot only supports the following containerized workloads:
 The creators of the BenchPilot are members of the [Laboratory for Internet Computing (LInC), University of Cyprus](http://linc.ucy.ac.cy/).
 You can find more information about our research activity visit our publications' [page](http://linc.ucy.ac.cy/index.php?id=12) and our [on-going projects](http://linc.ucy.ac.cy/index.php?id=13).
 
+### <strong>Publications</strong>
+For more details about BenchPilot and our scientific contributions, you can read the papers of BenchPilot v1.0 and v2.0. If you would like to use BenchPilot for your research, you should include at least on of the following BibTeX entries.
+
+BenchPilot v2.0 paper BibTeX citation:
+```
+@inproceedings{georgiou2025benchpilot,
+  title = {Automating Multi-Tenancy Performance Evaluation on Edge Compute Nodes},
+  author = {Georgiou, Joanna and Symeonides, Moysis and Pallis, George and Dikaiakos, Marios D},
+  booktitle = {Proceedings of the IEEE International Conference on Edge Computing & Communications (EDGE)},
+  year = {2025},
+  organization = {IEEE}
+}
+```
+
+BenchPilot v1.0 paper BibTeX citation:
+```
+@inproceedings{georgiou2022benchpilot,
+  title = {BenchPilot: repeatable \& reproducible benchmarking for edge micro-DCs},
+  author = {Georgiou, Joanna and Symeonides, Moysis and Kasioulis, Michalis and Trihinas, Demetris and Pallis, George and Dikaiakos, Marios D},
+  booktitle = {Proceedings of the Symposium on Computers and Communications (ISCC)},
+  year = {2022},
+  organization = {IEEE}
+}
+```
 
 ### <strong>Acknowledgements</strong>
-This work is partially supported by the EU Commission through [RAINBOW](https://rainbow-h2020.eu/)  871403 (ICT-15-2019-2020) project 
-and by the Cyprus Research and Innovation Foundation through COMPLEMENTARY/0916/0916/0171 project, and from [RAIS](https://rais-itn.eu/) (Real-time analytics for the Internet of Sports), Marie Skłodowska-Curie Innovative Training Networks (ITN), under grant agreement No 813162.
+This work is partially supported by the EU Commission through [RAINBOW](https://rainbow-h2020.eu/) 871403 (ICT-15-2019-2020) project and [AdaptoFlow](https://linc.ucy.ac.cy/index.php?id=315) (101017141) project, the Cyprus Research and Innovation Foundation through COMPLEMENTARY/0916/0916/0171 project, and the [RAIS](https://rais-itn.eu/) (Real-time analytics for the Internet of Sports) - Marie Skłodowska-Curie Innovative Training Networks (ITN), under grant agreement No 813162.
 
 ### <strong>License</strong>
 The framework is open-sourced under the Apache 2.0 License base. The codebase of the framework is maintained by the authors for academic research and is therefore provided "as is".
